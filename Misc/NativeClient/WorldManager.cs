@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NLog;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using FIVES;
 
 namespace NativeClient
 {
@@ -117,13 +118,7 @@ namespace NativeClient
 
         private void HandleUpdate(CallRequest request)
         {
-            List<UpdateInfo> receivedUpdates = request.Args[0].ToObject<List<UpdateInfo>>();
-            foreach(UpdateInfo update in receivedUpdates) {
-                string entityGuid = update.entityGuid;
-                string attribute = update.attributeName;
-                string component = update.componentName;
-                logger.Info("{0} updated attribute {1} of component {2}", entityGuid, attribute, component);
-            }
+            statistics.ReportObjectUpdate(request);
         }
 
         private void RequestAllObjects()
@@ -148,6 +143,7 @@ namespace NativeClient
 
         static Random random = new Random();
         static Logger logger = LogManager.GetCurrentClassLogger();
+        static Statistics statistics = Statistics.Instance;
     }
 }
 

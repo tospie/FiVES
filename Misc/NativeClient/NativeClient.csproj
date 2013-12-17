@@ -54,6 +54,7 @@
     <Compile Include="ClientDriver.cs" />
     <Compile Include="AxisAngle.cs" />
     <Compile Include="EntityInfo.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Quat.cs" />
     <Compile Include="AxisAngleTest.cs" />
@@ -78,6 +79,10 @@
     <ProjectReference Include="..\..\Protocols\WebSocketJSON\WebSocketJSON.csproj">
       <Project>{7729110a-d86e-4802-a158-9be992c98f68}</Project>
       <Name>WebSocketJSON</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Collections\Collections.csproj">
+      <Project>{9c2af21f-4d8c-4ade-a5c4-135a6f50e18a}</Project>
+      <Name>Collections</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

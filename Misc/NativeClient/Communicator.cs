@@ -125,6 +125,7 @@ namespace NativeClient
 
             var serializedMessage = JsonConvert.SerializeObject(message, settings);
             socket.Send(serializedMessage);
+            statistics.ReportMessageSent(message, serializedMessage.Length * sizeof(char));
 
             return callID;
         }
@@ -209,7 +210,6 @@ namespace NativeClient
         void HandleCallReplyMessage(string message, List<JToken> parsedMessage)
         {
             int callID = parsedMessage[1].ToObject<int>();
-
             Action<CallReply> callback;
             lock (expectedReplies)
             {
@@ -225,6 +225,8 @@ namespace NativeClient
         {
             List<JToken> parsedMessage = JsonConvert.DeserializeObject<List<JToken>>(e.Message);
             string messageType = parsedMessage[0].ToObject<string>();
+
+            statistics.ReportMessageReceived(parsedMessage, e.Message.Length * sizeof(char));
 
             try
             {
@@ -268,6 +270,7 @@ namespace NativeClient
         JsonSerializerSettings settings = new JsonSerializerSettings();
 
         static Logger logger = LogManager.GetCurrentClassLogger();
+        static Statistics statistics = Statistics.Instance;
     }
 }
 
