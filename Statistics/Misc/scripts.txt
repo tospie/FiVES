@@ -1,0 +1,85 @@
+# Collective data for pos updates: time, type of event, message id, process id
+cat Client*.log FIVES.log | grep PosUpdate | sed 's/\([0-9]*:[0-9]*:[0-9]*.[0-9]*\).*\(|\| \)\(.*\)PosUpdate.*X=\([E+0-9\.]*\) PID=\([0-9]*\).*/\4 \3 \1 \5/' > data.dat
+
+# Times at which clients have sent the update.
+cat Clients.log | grep ClientSentUpdate | sed 's/\(.*\)|.*|ClientSentUpdate TimeStamp=\([0-9\.]*\)/\1 \2/' > clientSentUpdates.dat
+
+# Collect data about messages received by client
+cat Clients.log | grep ClientReceivedMessage | sed 's/\(.*\)|.*|.* Size=\([0-9]*\)/\1 xxx \2/' > clientReceivedMessages.dat
+
+#####################################################
+
+# Trend of delays: time of arrival, message delay
+cat Clients.log | grep UpdateDelayMs | sed 's/\(.*\)|.*|UpdateDelayMs=\([0-9\.]*\) StartTimeStamp=\([0-9\.]*\).*/\1 \2 \3/' > delay.dat
+
+# Trend of queue size over time: time of measurement, queue size
+cat FIVES.log | grep QueueSize | sed 's/\([0-9]*:[0-9]*:[0-9]*.[0-9]*\) .*QueueSizeBytes=\([0-9]*\).*/\1 \2/' > queueSize.dat
+
+# Collect data about messages sent by client
+cat Clients.log | grep ClientSentMessage | sed 's/\(.*\)|.*|.* FuncName=\(.*\) Size=\([0-9]*\)/\1 \2 \3/' > clientSentMessages.dat
+
+#####################################
+# Long command to generate all data #
+#####################################
+cat FIVES.log | grep QueueSize | sed 's/\([0-9]*:[0-9]*:[0-9]*.[0-9]*\) .*QueueSizeBytes=\([0-9]*\).*/\1 \2/' > queueSize.dat &&
+cat Clients.log | grep UpdateDelayMs | sed 's/\(.*\)|.*|UpdateDelayMs=\([0-9\.]*\) StartTimeStamp=\([0-9\.]*\).*/\1 \2 \3/' > delay.dat &&
+cat Clients.log | grep ClientSentMessage | sed 's/\(.*\)|.*|.* FuncName=\(.*\) Size=\([0-9]*\)/\1 \2 \3/' > clientSentMessages.dat
+#####################################
+
+from datetime import timedelta
+from datetime import datetime
+from pprint import pprint
+
+data = {}
+for line in open('data').readlines():
+  key, event, date, pid = line.split()
+  key = int(float(key))
+  event = event.strip()
+  date = datetime.strptime(date, '%H:%M:%S.%f')
+  pid = int(pid)
+  if not key in data:
+    data[key] = {}
+  if not event in data[key]:
+    data[key][event] = []
+  data[key][event].append((pid, date))
+
+of = open('data2', 'w')
+for key in data:
+  start = data[key]["ClientSending"][0][1];
+  delay = timedelta(100)
+  if "ClientReceived" in data[key]:
+    for end in data[key]["ClientReceived"]:
+      delay = end[1] - start
+      of.write(end[1].strftime("%H:%M:%S") + " " + str(delay.total_seconds() * 1000) + " " + str(key) + "\n")
+    
+of.close();
+
+delays = {}
+for key in data:
+  start = data[key]["ClientSending"][0][1];
+  delay = timedelta(100)
+  for end in data[key]["ClientReceived"]:
+    if (end[1] - start) < delay:
+      delay = end[1] - start
+  delays[key] = delay
+
+max = timedelta(0)
+idx = -1
+for key in delays:
+  if delays[key] > max:
+    max = delays[key]
+    idx = key
+
+min = datetime(3000, 1, 1)
+max = datetime(1000, 1, 1)
+for key in data:
+  for event in data[key]:
+    for p in data[key][event]:
+      if p[1] < min:
+        min = p[1]
+      if p[1] > max:
+        max = p[1]
+
+pprint(data[idx], width=100)
+pprint(min)
+pprint(max)

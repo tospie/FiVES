@@ -1,0 +1,124 @@
+#!/bin/bash -e
+
+# FIVES deployment script. Automatically builds deployment archive, uploads to
+# a set of nodes on DFKI cluster, extracts on each node and starts the servers.
+
+# Archive configuration
+SOURCE_DIR=/d/Projects/FIVES/Binaries/Debug
+DEPLOYMENT_DIR=/d/Projects/FIVES/Stat/Binaries
+SOURCES=(Collections.dll MySql.Data.dll SuperSocket.SocketBase.dll DomainModel.dll NativeClient.exe SuperSocket.SocketEngine.dll Dynamitey.dll NativeClient.exe.config SuperWebSocket.dll FIVES.exe Newtonsoft.Json.dll V8.Net.Console.exe FIVES.exe.config NHibernate.dll V8.Net.dll NLog.dll V8.Net.SharedTypes.dll FiVESMath.dll nunit.framework.dll WebSocket4Net.dll hibernate.cfg.xml PluginManager.dll x64 Iesi.Collections.dll x86 log4net.dll Moq.dll SuperSocket.Common.dll WebSocketJSON.dll Auth.dll ClientManager.dll Editing.dll Location.dll Persistence.dll Scalability.dll scalabilitySyncClient.json scalabilitySyncServer.kiara Avatar.dll clientManagerServer.json KIARA.dll Motion.dll Renderable.dll Scalability.dll.config scalabilitySyncServer.json Scripting.dll)
+TARGETS=(. . . . . . . . . . . . . . . . . . . . . . . . . . . . Protocols Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins Plugins)
+USER=rryk
+
+# Node configuration
+NODES="saitanwurst teewurst"
+CONFIG_DIR=/d/Projects/FIVES/Stat/Configs
+
+if [[ $1 == "stop" ]]; then
+    echo "Stopping servers..."
+
+    echo
+    ssh $USER@172.16.8.99 "./distribute_command.sh killall screen" || true
+    echo
+elif [[ $1 == "status" || $1 == "stat" ]]; then
+    echo "Checking server status..."
+
+    echo
+    ssh $USER@172.16.8.99 "./distribute_command.sh screen -list"
+    echo
+elif [[ $1 == "logs" ]]; then
+    echo "Collecting logs..."
+
+    echo
+    ssh $USER@172.16.8.99 "./distribute_command.sh tar -czf log.tar.gz FIVES/FIVES.log"
+    ssh $USER@172.16.8.99 "./collect_files.sh log.tar.gz Logs .tar.gz"
+    ssh $USER@172.16.8.99 "tar -czf logs.tar.gz Logs"
+    scp $USER@172.16.8.99:logs.tar.gz logs.tar.gz
+    rm -rf Logs
+    tar -xf logs.tar.gz
+    cd Logs
+    tar -xf teewurst.tar.gz
+
+#    tar -xf FIVES/FIVES.log # FIVES.log is actually an archive of client logs
+#    mv Logs/*.log .
+#    rm Logs -r
+    mv FIVES/FIVES.log Clients.log
+
+    tar -xf saitanwurst.tar.gz
+    mv FIVES/FIVES.log .
+    rm *.tar.gz FIVES ../logs.tar.gz -r
+    cd ..
+    echo
+elif [[ $1 == "data" ]]; then
+    echo "Extracting data..."
+    cat logs | grep UpdateDelayMs | sed 's/\([0-9][0-9]:[0-9][0-9]:[0-9][0-9]\) \[INFO\] {NativeClient.Statistics.ReportObjectUpdate} UpdateDelayMs=/\1 /' > data
+    data_archive=data.$(date +%Y%M%d%H%M%S)
+    cat Configs/teewurst/command.sh >> $data_archive
+    cat data >> $data_archive
+elif [[ $1 == "exp" ]]; then
+    ssh $USER@172.16.8.99 "./distribute_command.sh echo\; cat FIVES/experiment.log\; echo"
+elif [[ $1 == "watch" ]]; then
+    watch -n 1 t status
+elif [[ $1 == "watchexp" ]]; then
+    watch -n 1 t exp
+elif [[ $1 == "run" || $1 == "all" ]]; then
+    t start
+    ssh $USER@172.16.8.99 "ssh teewurst while screen -list \| grep -q fives\; do cat FIVES/experiment.log\; echo\; sleep 5\; done"
+#    t watchexp || true
+    t logs
+#    t data
+    t stop
+else
+    CURDIR=$(pwd)
+
+    echo "Building deployment archive..."
+
+    rm -rf $DEPLOYMENT_DIR
+    mkdir -p $DEPLOYMENT_DIR
+    cd $DEPLOYMENT_DIR
+    mkdir FIVES FIVES/Plugins FIVES/Protocols
+
+    for ((i=0; i < ${#SOURCES[@]}; i++)); do
+        cp -a $SOURCE_DIR/${SOURCES[$i]} $DEPLOYMENT_DIR/FIVES/${TARGETS[$i]}
+    done
+
+    tar -czf fives.tar.gz FIVES
+
+    echo "Ditributing binaries..."
+
+    echo
+    ssh $USER@172.16.8.99 "echo \"$NODES\" > nodes"
+    scp fives.tar.gz $USER@172.16.8.99:fives.tar.gz
+    ssh $USER@172.16.8.99 "./distribute_file.sh fives.tar.gz"
+    ssh $USER@172.16.8.99 "./distribute_command.sh rm -rf FIVES \&\& tar -xf fives.tar.gz"
+    echo
+
+    echo "Distributing configuration..."
+
+    echo
+    cd $CONFIG_DIR
+    rm config.tar.gz -f
+    tar -czf config.tar.gz *
+    scp config.tar.gz $USER@172.16.8.99:config.tar.gz
+    ssh $USER@172.16.8.99 "rm -rf Config && mkdir Config && cd Config && tar -xf ../config.tar.gz"
+    for node in $NODES; do
+        ssh $USER@172.16.8.99 "cd Config/$node && tar -czf config.tar.gz * && scp config.tar.gz $node:FIVES/config.tar.gz"
+    done
+    ssh $USER@172.16.8.99 "./distribute_command.sh cd FIVES \&\& tar -xf config.tar.gz"
+    echo
+
+    echo "Starting the servers..."
+
+    echo
+    ssh $USER@172.16.8.99 "./distribute_command.sh killall screen" || true
+    ssh $USER@172.16.8.99 "./distribute_command.sh cd FIVES \&\& chmod u+x command.sh \&\& screen -S fives -d -m ./command.sh"
+    echo
+
+    echo "Checking server status..."
+
+    echo
+    ssh $USER@172.16.8.99 "./distribute_command.sh screen -list"
+    echo
+
+    cd $CURDIR
+fi

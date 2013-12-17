@@ -13,6 +13,8 @@ Binaries/
 TestResults
 Core/PluginManager/TestPlugins
 *~
-*.vsp
+Statistics/Binaries
+Statistics/Logs
 *.psess
 WebClient/resources/proprietary
+*.vsp
