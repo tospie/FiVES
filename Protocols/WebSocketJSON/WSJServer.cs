@@ -9,6 +9,10 @@ using SuperSocket.SocketBase.Command;
 using SuperSocket.SocketBase.Logging;
 using SuperWebSocket.Protocol;
 using SuperSocket.SocketBase.Config;
+using System.Threading.Tasks;
+using NLog;
+using System.Threading;
+using System.Linq;
 
 namespace WebSocketJSON
 {
@@ -34,15 +38,34 @@ namespace WebSocketJSON
         /// <param name="onNewClient">The handler to be called for each new client.</param>
         public WSJServer(Action<Connection> onNewClient)
         {
+            Task.Factory.StartNew(QueueMonitoringThread);
+
             NewSessionConnected += (session) =>
             {
                 session.SocketSession.Closed += (genericSession, reason) => session.HandleClosed(reason.ToString());
 
                 var socketAdapter = new WSJSessionSocketAdapter(session);
                 onNewClient(new WSJConnection(socketAdapter));
+                lock (sessions)
+                    sessions.Add(session);
             };
             NewMessageReceived += (session, value) => session.HandleMessageReceived(value);
         }
+
+        void QueueMonitoringThread()
+        {
+            while (true)
+            {
+                int bytesInQueue = 0;
+                lock (sessions)
+                    bytesInQueue = sessions.Sum(s => s.SocketSession.Client.Available);
+                logger.Info("QueueSizeBytes=" + bytesInQueue);
+                Thread.Sleep(50);
+            }
+        }
+
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private List<WSJSession> sessions = new List<WSJSession>();
     }
 }
 
