@@ -15,16 +15,16 @@ namespace FIVES
         /// <param name="axis"></param>
         /// <param name="angle"></param>
         /// <returns></returns>
-        public static Vector RotateVectorByAxisAngle(Vector vector, Vector axis, float angle)
+        public static Vector RotateVectorByAxisAngle(Vector vector, Vector axis, double angle)
         {
             Vector result = new Vector();
 
-            float cosAngle =  (float)System.Math.Cos(angle);
-            float sinAngle = (float)System.Math.Sin(angle);
+            double cosAngle =  (double)System.Math.Cos(angle);
+            double sinAngle = (double)System.Math.Sin(angle);
 
             Vector scaledVector = ScaleVector(vector, cosAngle); // v*cos a 
 
-            float axisFactor = ScalarProduct(vector, axis)*(1 - cosAngle); // (n.v)(1 - cos a)
+            double axisFactor = ScalarProduct(vector, axis)*(1 - cosAngle); // (n.v)(1 - cos a)
             Vector scaledAxis = ScaleVector(axis, axisFactor); // n(n.v)(1-cos a)
 
             Vector scaledCross = ScaleVector(CrossProduct(vector, axis), sinAngle); // (v x n)sin a
@@ -34,12 +34,12 @@ namespace FIVES
             return result;
         }
 
-        public static float VectorLength(Vector vector)
+        public static double VectorLength(Vector vector)
         {
-            return (float)System.Math.Sqrt(ScalarProduct(vector, vector));
+            return (double)System.Math.Sqrt(ScalarProduct(vector, vector));
         }
 
-        public static float ScalarProduct(Vector vector1, Vector vector2)
+        public static double ScalarProduct(Vector vector1, Vector vector2)
         {
             return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
         }
@@ -53,7 +53,7 @@ namespace FIVES
             return result;
         }
 
-        public static Vector ScaleVector(Vector vector, float scalar)
+        public static Vector ScaleVector(Vector vector, double scalar)
         {
             Vector result = new Vector();
             result.x = vector.x * scalar;
@@ -76,9 +76,9 @@ namespace FIVES
             Vector axis = new Vector();
             if (q.w * q.w != 1)
             {
-                axis.x = q.x / ((float)System.Math.Sqrt(1 - q.w * q.w));
-                axis.y = q.y / ((float)System.Math.Sqrt(1 - q.w * q.w));
-                axis.z = q.z / ((float)System.Math.Sqrt(1 - q.w * q.w));
+                axis.x = q.x / ((double)System.Math.Sqrt(1 - q.w * q.w));
+                axis.y = q.y / ((double)System.Math.Sqrt(1 - q.w * q.w));
+                axis.z = q.z / ((double)System.Math.Sqrt(1 - q.w * q.w));
             }
             else
             {
@@ -87,18 +87,18 @@ namespace FIVES
             return axis;
         }
 
-        public static float AngleFromQuaternion(Quat q)
+        public static double AngleFromQuaternion(Quat q)
         {
-            return 2.0f * (float)System.Math.Acos(q.w);
+            return 2.0f * (double)System.Math.Acos(q.w);
         }
 
-        public static Quat QuaternionFromAxisAngle(Vector axis, float r)
+        public static Quat QuaternionFromAxisAngle(Vector axis, double r)
         {
             Quat q = new Quat();
-            q.x = axis.x * (float)System.Math.Sin(0.5 * r);
-            q.y = axis.y * (float)System.Math.Sin(0.5 * r);
-            q.z = axis.z * (float)System.Math.Sin(0.5 * r);
-            q.w = (float)System.Math.Cos(0.5 * r);
+            q.x = axis.x * (double)System.Math.Sin(0.5 * r);
+            q.y = axis.y * (double)System.Math.Sin(0.5 * r);
+            q.z = axis.z * (double)System.Math.Sin(0.5 * r);
+            q.w = (double)System.Math.Cos(0.5 * r);
             return q;
         }
 

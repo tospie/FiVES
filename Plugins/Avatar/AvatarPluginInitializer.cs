@@ -45,9 +45,9 @@ namespace AvatarPlugin
                 {"getAvatarEntityGuid", (Func<Connection, string>)GetAvatarEntityGuid},
                 {"changeAppearance", (Action<Connection, string, Vector>)ChangeAppearance},
                 {"startAvatarMotionInDirection", (Action<Connection, Vector>)StartAvatarMotionInDirection},
-                {"setAvatarForwardBackwardMotion", (Action<Connection, float>)SetForwardBackwardMotion},
-                {"setAvatarLeftRightMotion", (Action<Connection, float>)SetLeftRightMotion},
-                {"setAvatarSpinAroundAxis",(Action<Connection, Vector, float>)SetAvatarSpinAroundAxis}
+                {"setAvatarForwardBackwardMotion", (Action<Connection, double>)SetForwardBackwardMotion},
+                {"setAvatarLeftRightMotion", (Action<Connection, double>)SetLeftRightMotion},
+                {"setAvatarSpinAroundAxis",(Action<Connection, Vector, double>)SetAvatarSpinAroundAxis}
             });
 
             ClientManager.Instance.NotifyWhenAnyClientAuthenticated(delegate(Connection connection) {
@@ -166,24 +166,24 @@ namespace AvatarPlugin
         {
             var avatarEntity = GetAvatarEntityByConnection(connection);
 
-            avatarEntity["velocity"]["x"] = (float)velocity.x;
-            avatarEntity["velocity"]["y"] = (float)velocity.y;
-            avatarEntity["velocity"]["z"] = (float)velocity.z;
+            avatarEntity["velocity"]["x"] = velocity.x;
+            avatarEntity["velocity"]["y"] = velocity.y;
+            avatarEntity["velocity"]["z"] = velocity.z;
         }
 
-        void SetForwardBackwardMotion(Connection connection, float amount)
+        void SetForwardBackwardMotion(Connection connection, double amount)
         {
             var avatarEntity = GetAvatarEntityByConnection(connection);
             avatarEntity["velocity"]["x"] = amount;
         }
 
-        void SetLeftRightMotion(Connection connection, float amount)
+        void SetLeftRightMotion(Connection connection, double amount)
         {
             var avatarEntity = GetAvatarEntityByConnection(connection);
             avatarEntity["velocity"]["z"] = amount;
         }
 
-        void SetAvatarSpinAroundAxis(Connection connection, Vector axis, float angle)
+        void SetAvatarSpinAroundAxis(Connection connection, Vector axis, double angle)
         {
             var avatarEntity = GetAvatarEntityByConnection(connection);
             avatarEntity["rotVelocity"]["x"] = axis.x;

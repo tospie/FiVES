@@ -72,17 +72,17 @@ namespace MotionPlugin
         {
             // Velocity is represented as a vector (x,y,z) in world units per second.
             ComponentDefinition velocity = new ComponentDefinition("velocity");
-            velocity.AddAttribute<float> ("x", 0f);
-            velocity.AddAttribute<float> ("y", 0f);
-            velocity.AddAttribute<float> ("z", 0f);
+            velocity.AddAttribute<double> ("x", 0.0);
+            velocity.AddAttribute<double> ("y", 0.0);
+            velocity.AddAttribute<double> ("z", 0.0);
             ComponentRegistry.Instance.Register(velocity);
 
             // Rotation velocity is represented as an axis (x, y, z) and angular rotation r in radians per second.
             ComponentDefinition rotVelocity = new ComponentDefinition("rotVelocity");
-            rotVelocity.AddAttribute<float>("x", 0f);
-            rotVelocity.AddAttribute<float>("y", 1f);
-            rotVelocity.AddAttribute<float>("z", 0f);
-            rotVelocity.AddAttribute<float>("r", 0f);
+            rotVelocity.AddAttribute<double>("x", 0.0);
+            rotVelocity.AddAttribute<double>("y", 1.0);
+            rotVelocity.AddAttribute<double>("z", 0.0);
+            rotVelocity.AddAttribute<double>("r", 0.0);
             ComponentRegistry.Instance.Register(rotVelocity);
         }
 
@@ -247,9 +247,9 @@ namespace MotionPlugin
         /// <param name="updatedEntity">Entity for which motion is updated</param>
         private void UpdateMotion(Entity updatedEntity) {
             Vector velocityInWorldSpace = velocitiesInWorldspace[updatedEntity.Guid];
-            updatedEntity["position"]["x"] = (float)updatedEntity["position"]["x"] + velocityInWorldSpace.x;
-            updatedEntity["position"]["y"] = (float)updatedEntity["position"]["y"] + velocityInWorldSpace.y;
-            updatedEntity["position"]["z"] = (float)updatedEntity["position"]["z"] + velocityInWorldSpace.z;
+            updatedEntity["position"]["x"] = (double)updatedEntity["position"]["x"] + velocityInWorldSpace.x;
+            updatedEntity["position"]["y"] = (double)updatedEntity["position"]["y"] + velocityInWorldSpace.y;
+            updatedEntity["position"]["z"] = (double)updatedEntity["position"]["z"] + velocityInWorldSpace.z;
         }
 
         /// <summary>
@@ -261,10 +261,10 @@ namespace MotionPlugin
             Quat entityRotation = EntityRotationAsQuaternion(updatedEntity);
 
             Vector spinAxis = new Vector();
-            spinAxis.x = (float)updatedEntity["rotVelocity"]["x"];
-            spinAxis.y = (float)updatedEntity["rotVelocity"]["y"];
-            spinAxis.z = (float)updatedEntity["rotVelocity"]["z"];
-            float spinAngle = (float)updatedEntity["rotVelocity"]["r"];
+            spinAxis.x = (double)updatedEntity["rotVelocity"]["x"];
+            spinAxis.y = (double)updatedEntity["rotVelocity"]["y"];
+            spinAxis.z = (double)updatedEntity["rotVelocity"]["z"];
+            double spinAngle = (double)updatedEntity["rotVelocity"]["r"];
 
             Quat spinAsQuaternion = FIVES.Math.QuaternionFromAxisAngle(spinAxis, spinAngle);
 
@@ -283,18 +283,18 @@ namespace MotionPlugin
         private Vector GetVelocityInWorldSpace(Entity updatedEntity)
         {
             Vector velocity = new Vector();
-            velocity.x = (float)updatedEntity["velocity"]["x"];
-            velocity.y = (float)updatedEntity["velocity"]["y"];
-            velocity.z = (float)updatedEntity["velocity"]["z"];
+            velocity.x = (double)updatedEntity["velocity"]["x"];
+            velocity.y = (double)updatedEntity["velocity"]["y"];
+            velocity.z = (double)updatedEntity["velocity"]["z"];
 
             Quat entityRotation = new Quat();
-            entityRotation.x = (float)updatedEntity["orientation"]["x"];
-            entityRotation.y = (float)updatedEntity["orientation"]["y"];
-            entityRotation.z = (float)updatedEntity["orientation"]["z"];
-            entityRotation.w = (float)updatedEntity["orientation"]["w"];
+            entityRotation.x = (double)updatedEntity["orientation"]["x"];
+            entityRotation.y = (double)updatedEntity["orientation"]["y"];
+            entityRotation.z = (double)updatedEntity["orientation"]["z"];
+            entityRotation.w = (double)updatedEntity["orientation"]["w"];
 
             Vector axis = FIVES.Math.AxisFromQuaternion(entityRotation);
-            float angle = FIVES.Math.AngleFromQuaternion(entityRotation);
+            double angle = FIVES.Math.AngleFromQuaternion(entityRotation);
 
             return FIVES.Math.RotateVectorByAxisAngle(velocity, axis, -angle) /* negative angle because we apply the inverse transform */;
         }
@@ -306,10 +306,10 @@ namespace MotionPlugin
         /// <returns></returns>
         private Quat EntityRotationAsQuaternion(Entity entity) {
             Quat entityRotation = new Quat();
-            entityRotation.x = (float)entity["orientation"]["x"];
-            entityRotation.y = (float)entity["orientation"]["y"];
-            entityRotation.z = (float)entity["orientation"]["z"];
-            entityRotation.w = (float)entity["orientation"]["w"];
+            entityRotation.x = (double)entity["orientation"]["x"];
+            entityRotation.y = (double)entity["orientation"]["y"];
+            entityRotation.z = (double)entity["orientation"]["z"];
+            entityRotation.w = (double)entity["orientation"]["w"];
 
             return entityRotation;
         }
@@ -320,9 +320,9 @@ namespace MotionPlugin
         /// <param name="entity">Entity to check</param>
         /// <returns>true, if at least one attribute of its velocity component is != 0</returns>
         private bool IsMoving(Entity entity) {
-            return !((float)entity["velocity"]["x"] == 0
-                && (float)entity["velocity"]["y"] == 0
-                && (float)entity["velocity"]["z"] == 0);
+            return !((double)entity["velocity"]["x"] == 0
+                && (double)entity["velocity"]["y"] == 0
+                && (double)entity["velocity"]["z"] == 0);
         }
 
         /// <summary>
@@ -331,10 +331,10 @@ namespace MotionPlugin
         /// <param name="entity">Entity to check</param>
         /// <returns>True, if spin axis is not the null vector, and velocity is not 0</returns>
         private bool IsSpinning(Entity entity) {
-            return (float)entity["rotVelocity"]["r"] != 0
-                && !((float)entity["rotVelocity"]["x"] == 0
-                    && (float)entity["rotVelocity"]["y"] == 0
-                    && (float)entity["rotVelocity"]["z"] ==0);
+            return (double)entity["rotVelocity"]["r"] != 0
+                && !((double)entity["rotVelocity"]["x"] == 0
+                    && (double)entity["rotVelocity"]["y"] == 0
+                    && (double)entity["rotVelocity"]["z"] ==0);
         }
 
         private ISet<Entity> ongoingMotion = new HashSet<Entity>();

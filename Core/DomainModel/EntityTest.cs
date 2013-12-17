@@ -42,20 +42,20 @@ namespace FIVES
         {
             ComponentDefinition def = new ComponentDefinition("defTypeTest");
 
-            def.AddAttribute<double>("c", 42.0);
-            def.AddAttribute<int?>("e", null);
-            def.AddAttribute<int?>("f", 34);
+            def.AddAttribute<double>("a", 42.0);
+            def.AddAttribute<int?>("b", null);
+            def.AddAttribute<int?>("c", 34);
 
             Assert.Catch<AttributeDefinitionException>(delegate {
                 def.AddAttribute<double>("d", 42);
             });
 
             Assert.Catch<AttributeDefinitionException>(delegate {
-                def.AddAttribute<double>("a", 42);
+                def.AddAttribute<string>("e", 'x');
             });
 
             Assert.Catch<AttributeDefinitionException>(delegate {
-                def.AddAttribute<double>("b", 42f);
+                def.AddAttribute<double>("f", 42f);
             });
 
             Assert.Catch<AttributeDefinitionException>(delegate {

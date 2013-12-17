@@ -18,16 +18,16 @@ namespace NativeClient
         }
 
         /// <summary>
-        /// Returns a number of milliseconds that has passed since start of the day. This value will be relatively
-        /// small and may be precisely stored in a float.
+        /// Returns a number of milliseconds that has passed since 04.12.2013 19:50:00. This value will be relatively
+        /// small and may be precisely stored in a double.
         /// </summary>
-        /// <value>Number of milliseconds since start of the day.</value>
-        public static float FloatMilliseconds
+        /// <value>Number of milliseconds since 04.12.2013 19:50:00.</value>
+        public static double DoubleMilliseconds
         {
             get
             {
                 TimeSpan span = (DateTime.Now - DateTime.Today);
-                return (float)span.TotalMilliseconds;
+                return span.TotalMilliseconds;
             }
         }
     }

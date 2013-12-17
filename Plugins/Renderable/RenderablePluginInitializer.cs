@@ -50,9 +50,9 @@ namespace RenderablePlugin
             ComponentRegistry.Instance.Register(renderable);
 
             ComponentDefinition scale = new ComponentDefinition("scale");
-            scale.AddAttribute<float>("x", 1f);
-            scale.AddAttribute<float>("y", 1f);
-            scale.AddAttribute<float>("z", 1f);
+            scale.AddAttribute<double>("x", 1.0);
+            scale.AddAttribute<double>("y", 1.0);
+            scale.AddAttribute<double>("z", 1.0);
             ComponentRegistry.Instance.Register(scale);
         }
 

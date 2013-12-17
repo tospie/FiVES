@@ -134,7 +134,7 @@ namespace NativeClient
 
         void MoveEntity(EntityInfo info)
         {
-            info.Position.x = Timestamps.FloatMilliseconds;
+            info.Position.x = Timestamps.DoubleMilliseconds;
             communicator.Call("location.updatePosition", info.Guid, info.Position, Timestamps.UnixTimestamp);
         }
 
