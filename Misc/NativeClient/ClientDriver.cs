@@ -136,6 +136,7 @@ namespace NativeClient
         {
             info.Position.x = Timestamps.DoubleMilliseconds;
             communicator.Call("location.updatePosition", info.Guid, info.Position, Timestamps.UnixTimestamp);
+            logger.Info("ClientSentUpdate TimeStamp=" + info.Position.x);
         }
 
         void MoveLocallyCreatedEntities()
