@@ -114,9 +114,6 @@ namespace ScalabilityPlugin
             Configuration config = ConfigurationManager.OpenExeConfiguration(scalabilityConfigPath);
 
             IsSyncRelay = Boolean.Parse(config.AppSettings.Settings["IsSyncRelay"].Value);
-
-            logger.Debug("IsSyncRelay = " + IsSyncRelay);
-            logger.Debug("LocalSyncID = " + LocalSyncID);
         }
 
         /// <summary>
@@ -352,7 +349,7 @@ namespace ScalabilityPlugin
             }
 
             timeDelayToServerMs = Convert.ToInt32(Math.Round(accumulatedDelayMs / numSyncsToAverage));
-            logger.Debug("Estimated time delay is " + timeDelayToServerMs);
+            logger.Info("Estimated time delay is " + timeDelayToServerMs);
         }
 
         /// <summary>
