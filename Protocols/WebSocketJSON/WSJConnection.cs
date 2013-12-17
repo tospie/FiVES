@@ -129,6 +129,16 @@ namespace WebSocketJSON
         {
             string serializedMessage = JsonConvert.SerializeObject(message, settings);
             SendSerializedMessage(serializedMessage);
+            LogSentMessage(message, serializedMessage.Length * sizeof(char));
+        }
+
+        private void LogSentMessage(List<object> message, int serializedMessageSize)
+        {
+            string logMessage = "SentMessage Class=" + message[0].ToString();
+            if (message[0].Equals("call"))
+                logMessage += " FuncName=" + message[2];
+            logMessage += " Size=" + serializedMessageSize;
+            logger.Debug(logMessage);
         }
 
         private void HandleCall(List<JToken> data)
