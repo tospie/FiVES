@@ -2,7 +2,7 @@ using System;
 
 namespace NativeClient
 {
-    class Timestamps
+    public class Timestamps
     {
         /// <summary>
         /// Computes Unix timestamp for the current moment.

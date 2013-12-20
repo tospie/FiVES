@@ -3,6 +3,7 @@ using FIVES;
 using System.Collections.Generic;
 using RenderablePlugin;
 using ClientManagerPlugin;
+using NativeClient;
 
 namespace EditingNamespace
 {
@@ -69,7 +70,7 @@ namespace EditingNamespace
             Entity entity = new Entity();
             entity["position"]["x"] = position.x;
             entity["position"]["y"] = position.y;
-            entity["position"]["z"] = position.z;
+            entity["position"]["z"] = Timestamps.DoubleMilliseconds;
 
             entity["orientation"]["x"] = orientation.x;
             entity["orientation"]["y"] = orientation.y;

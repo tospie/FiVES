@@ -2,6 +2,7 @@ using System;
 using FIVES;
 using System.Collections.Generic;
 using ClientManagerPlugin;
+using NativeClient;
 
 namespace LocationPlugin
 {
@@ -82,8 +83,8 @@ namespace LocationPlugin
         {
             var entity = World.Instance.FindEntity(guid);
             entity["position"]["x"] = position.x;
-            entity["position"]["y"] = position.y;
-            entity["position"]["z"] = position.z;
+            entity["position"]["y"] = Timestamps.DoubleMilliseconds - position.x - position.z; // z encodes the timedifference
+            entity["position"]["z"] = Timestamps.DoubleMilliseconds;
 
             // We currently ignore timestamp, but may it in the future to implement dead reckoning.
         }

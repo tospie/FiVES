@@ -68,6 +68,10 @@
       <Project>{DB1099A1-B7FE-474F-A03A-41687D6C5C76}</Project>
       <Name>PluginManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Misc\NativeClient\NativeClient.csproj">
+      <Project>{dab6e47c-8a5e-4cc9-af7b-21388014a5ad}</Project>
+      <Name>NativeClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Auth\Auth.csproj">
       <Project>{CCDA8021-971D-4703-A4BD-325248EF9499}</Project>
       <Name>Auth</Name>
