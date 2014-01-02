@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using KIARAPlugin;
+using NativeClient;
 
 namespace ClientManagerPlugin
 {
@@ -57,6 +58,7 @@ namespace ClientManagerPlugin
                 }
 
                 // Wait for updates to accumulate (to send them in batches)
+
                 Thread.Sleep(10);
             }
         }
@@ -66,6 +68,16 @@ namespace ClientManagerPlugin
         /// </summary>
         private void InvokeClientCallbacks()
         {
+            for (var i = 0; i < UpdateQueue.Count; i++)
+            {
+                var update = UpdateQueue[i];
+                if (update.componentName == "position" && update.attributeName == "z")
+                {
+                    update.value = Timestamps.DoubleMilliseconds - (double)update.value;
+                    UpdateQueue[i] = update;
+                }
+            }
+
             lock (CallbackRegistryLock)
             {
                 foreach (Action<List<UpdateInfo>> callback in ClientCallbacks.Values)
