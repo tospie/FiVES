@@ -81,10 +81,15 @@ namespace LocationPlugin
 
         private void UpdatePosition(string guid, Vector position, int timestamp)
         {
+            var currentTimestamp = Timestamps.DoubleMilliseconds;
+
             var entity = World.Instance.FindEntity(guid);
             entity["position"]["x"] = position.x;
-            entity["position"]["y"] = Timestamps.DoubleMilliseconds - position.x - position.z; // z encodes the timedifference
-            entity["position"]["z"] = Timestamps.DoubleMilliseconds;
+            var incomingProcessing = currentTimestamp - position.x;
+            if(incomingProcessing == (double)entity["position"]["y"])
+                incomingProcessing += 0.000001;
+            entity["position"]["y"] = incomingProcessing; //  -position.z; // z encodes the timedifference
+            entity["position"]["z"] = currentTimestamp;
 
             // We currently ignore timestamp, but may it in the future to implement dead reckoning.
         }
