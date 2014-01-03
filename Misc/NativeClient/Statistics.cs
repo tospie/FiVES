@@ -42,13 +42,28 @@ namespace NativeClient
             List<JToken> updates = request.Args[0].ToObject<List<JToken>>();
             foreach (JToken update in updates)
             {
-                if (update["componentName"].ToString() == "position" && update["attributeName"].ToString() == "x")
+                if (update["componentName"].ToString() == "position")
                 {
-                    double startTimestampMs = update["value"].ToObject<double>();
-                    double endTimestampMs = Timestamps.DoubleMilliseconds;
-                    logger.Info("UpdateDelayMs=" + (endTimestampMs - startTimestampMs) +
-                        " StartTimeStamp=" + startTimestampMs +
-                                " EndTimeStamp=" + endTimestampMs);
+                    var attributeName = update["attributeName"].ToString();
+                    var attributeValue = update["value"].ToObject<double>();
+                    if (attributeName == "x")
+                    {
+                        double startTimestampMs = attributeValue;
+                        double endTimestampMs = Timestamps.DoubleMilliseconds;
+                        logger.Info("UpdateDelayMs=" + (endTimestampMs - startTimestampMs) +
+                            " StartTimeStamp=" + startTimestampMs +
+                                    " EndTimeStamp=" + endTimestampMs);
+                    }
+                    else if (attributeName == "y")
+                    {
+                        double updateDelay = attributeValue;
+                        logger.Info("UpdateDelayMs=" + updateDelay);
+                    }
+                    else if (attributeName == "z")
+                    {
+                        double queueProcessingTime = attributeValue;
+                        logger.Info("QueueProcessingTime=" + queueProcessingTime);
+                    }
                 }
             }
         }
