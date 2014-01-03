@@ -57,6 +57,7 @@ namespace NativeClient
                     else if (attributeName == "y")
                     {
                         double updateDelay = attributeValue;
+                        if (updateDelay == 1e-06) updateDelay = 0.0;
                         logger.Info("DelayToAttributeUpdate=" + updateDelay);
                     }
                     else if (attributeName == "z")
