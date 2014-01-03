@@ -34,9 +34,9 @@ namespace NativeClient
             {
                 Position = new Vector
                 {
-                    x = random.NextDouble() * 20 - 10,
+                    x = Timestamps.DoubleMilliseconds,
                     y = random.NextDouble() * 20 - 10,
-                    z = random.NextDouble() * 20 - 10
+                    z = ClientDriver.TimeDelay
                 },
                 Orientation = new Quat { x = 0, y = 0, z = 0, w = 1 },
                 IsLocallyCreated = true

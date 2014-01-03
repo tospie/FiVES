@@ -87,6 +87,7 @@ namespace NativeClient
 
             logger.Info("Authenticating as a client");
 
+            TimeDelay = e.TimeDelayMs;
             Authenticator authenticator = new Authenticator(communicator);
             authenticator.Authenticated += HandleAuthenticated;
         }
@@ -185,5 +186,6 @@ namespace NativeClient
         WorldManager worldManager;
 
         static Logger logger = LogManager.GetCurrentClassLogger();
+        public static double TimeDelay = 0.0;
     }
 }
