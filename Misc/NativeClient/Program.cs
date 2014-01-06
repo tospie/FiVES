@@ -2,6 +2,7 @@ using System;
 using NLog;
 using System.Configuration;
 using NLog.Targets;
+using System.Threading;
 
 namespace NativeClient
 {
@@ -12,18 +13,25 @@ namespace NativeClient
         public static void Main(string[] args)
         {
             ConfigureNLog(args);
-
-            var clientDriver = new ClientDriver();
-
             Logger.Info("Reading configuration");
 
             ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            clientDriver.Configure(ConfigurationManager.AppSettings);
-
-            Logger.Info("Starting simulation");
-
-            clientDriver.StartSimulation();
-
+            int numClients = 1;
+            try
+            {
+               int.TryParse(ConfigurationManager.AppSettings.Get("NumClients"), out numClients);
+            }
+            finally
+            {
+                for(var i = 0; i < numClients; i++)
+                {
+                    var clientDriver = new ClientDriver();
+                    clientDriver.Configure(ConfigurationManager.AppSettings);
+                    Logger.Info("Starting simulation");
+                    clientDriver.StartSimulation();
+                    Thread.Sleep(30);
+                }
+            }
             // Wait for 'q' key to be pressed.
             Console.WriteLine("The server is up and running. Press 'q' to stop it...");
             Console.Read();
