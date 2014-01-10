@@ -150,6 +150,8 @@ namespace MotionPlugin
                 CheckForEntityMoving(entity);
             if(e.Component.Name == "rotVelocity")
                 CheckForEntitySpinning(entity);
+            if (e.Component.Name == "orientation")
+                RecalculateVelocityInWorldspace(entity);
         }
 
         /// <summary>
@@ -175,9 +177,10 @@ namespace MotionPlugin
                 {
                     if(ongoingMotion.Contains(entity))
                         ongoingMotion.Remove(entity);
-                    if(velocitiesInWorldspace.ContainsKey(entity.Guid))
-                        velocitiesInWorldspace.Remove(entity.Guid);
                 }
+
+                if (velocitiesInWorldspace.ContainsKey(entity.Guid))
+                     velocitiesInWorldspace.Remove(entity.Guid);
             }
         }
 
@@ -270,8 +273,6 @@ namespace MotionPlugin
             updatedEntity["orientation"]["y"] = newRotationAsQuaternion.y;
             updatedEntity["orientation"]["z"] = newRotationAsQuaternion.z;
             updatedEntity["orientation"]["w"] = newRotationAsQuaternion.w;
-
-            RecalculateVelocityInWorldspace(updatedEntity);
         }
 
         /// <summary>
