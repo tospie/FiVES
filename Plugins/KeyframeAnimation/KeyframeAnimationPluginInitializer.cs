@@ -37,6 +37,7 @@ namespace KeyframeAnimationPlugin
 
         public void Shutdown()
         {
+
         }
 
         internal void RegisterComponents()
