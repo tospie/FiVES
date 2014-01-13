@@ -71,11 +71,6 @@ namespace ClientManagerPlugin
             for (var i = 0; i < UpdateQueue.Count; i++)
             {
                 var update = UpdateQueue[i];
-                if (update.componentName == "position" && update.attributeName == "z")
-                {
-                    update.value = Timestamps.DoubleMilliseconds - (double)update.value;
-                    UpdateQueue[i] = update;
-                }
                 if (update.componentName == "orientation" && update.attributeName == "x")
                 {
                     update.value = UpdateQueue.Count;
