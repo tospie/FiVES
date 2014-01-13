@@ -136,6 +136,7 @@ namespace ClientManagerPlugin
             World.Instance.RemovedEntity += handler;
         }
 
+
         void NotifyAboutObjectUpdates(Connection connection, Action<List<ClientUpdateQueue.UpdateInfo>> callback)
         {
             UpdateQueue.RegisterToClientUpdates(connection, callback);
