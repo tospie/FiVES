@@ -127,17 +127,21 @@ namespace WebSocketJSON
 
         internal void SendMessage(List<object> message)
         {
+            int beforeSerialize = DateTime.Now.Millisecond;
             string serializedMessage = JsonConvert.SerializeObject(message, settings);
             SendSerializedMessage(serializedMessage);
-            LogSentMessage(message, serializedMessage.Length * sizeof(char));
+            int afterSerialize = DateTime.Now.Millisecond;
+            LogSentMessage(message, serializedMessage.Length * sizeof(char), afterSerialize-beforeSerialize);
         }
 
-        private void LogSentMessage(List<object> message, int serializedMessageSize)
+        private void LogSentMessage(List<object> message, int serializedMessageSize, int serializationTime)
         {
             string logMessage = "SentMessage Class=" + message[0].ToString();
             if (message[0].Equals("call"))
                 logMessage += " FuncName=" + message[2];
+            logMessage += " MessageID=" + message[1];
             logMessage += " Size=" + serializedMessageSize;
+            logMessage += " SerializationTime=" + serializationTime;
             logger.Debug(logMessage);
         }
 
