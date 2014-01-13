@@ -20,6 +20,7 @@ fi
 
 # Collect logs for 60 seconds
 rm Logs -fr
+rm FiVES.log
 mkdir -p Logs
 killall screen
 echo "Starting $numClients clients..."
@@ -43,9 +44,11 @@ cat Clients.log | grep UpdateDelayMs=[0-9] | sed 's/.*UpdateDelayMs=\([0-9\.]*\)
 cat Clients.log | grep DelayToAttributeUpdate=[0-9] | sed 's/.*DelayToAttributeUpdate=\([0-9\.]*\)/\1/' > attributeDelay.dat
 cat Clients.log | grep QueueProcessingTime | sed 's/.*QueueProcessingTime=\([0-9]*\)*/\1/' > queueProcessing.dat
 cat Clients.log | grep ClientReceivedMessage | sed 's/\([^ ]*\) .*ClientReceivedMessage CallID=\([0-9]*\) .*/\1 \2/' > clientReceived.dat
-cat FIVES.log | grep SentMessage | sed 's/\([^ ]*\) .*SentMessage CallID=\([0-9]*\) .*/\1 \2/' > serverSent.dat
+cat FIVES.log | grep SentMessage | sed 's/.*SentMessage .*MessageID=\([0-9]*\) SentTime=\([0-9]*\).*/\1:\2/' | sort -n > serverSent.dat
+cat Clients.log | grep ClientFinishedMessageHandling | sed 's/.*MessageID=\([0-9]*\) FinishedTime=\([0-9]*\).*/\1:\2/' | sort -n > finishedTime.dat
+cat Clients.log | grep MessageReceived | sed 's/.*MessageID=\([0-9]*\)[. ]* ReceivedTime=\([0-9]*\).*/\1:\2/' | sort -n > receivedTime.dat
+
 ./processDelay_attributes.py
 
-cat Clients.log grep ClientFinishedMessageHandling | sed 's/.*MessageID=\([0-9]*\) FinishedTime=\([0-9\.]*\).*/\2/' > finishedTime.dat
-cat Clients.log | grep MessageReceived | sed 's/.*MessageID=\([0-9]*\)[. ]* ReceivedTime=\([0-9\.]*\).*/\2/' > receivedTime.dat
+
 echo "Done."

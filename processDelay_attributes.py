@@ -37,3 +37,27 @@ print "  Last 80 % are above " + str(queueTimes[int(len(queueTimes)*0.2)])
 print "  Last 50 % are above " + str(queueTimes[int(len(queueTimes)*0.5)])
 print "  Last 30 % are above " + str(queueTimes[int(len(queueTimes)*0.7)])
 print "  Last 10 % are above " + str(queueTimes[int(len(queueTimes)*0.9)])
+
+incomingTimes = [str(y) for y in open('receivedTime.dat').readlines()]
+finishedTimes = [str(z) for z in open('finishedTime.dat').readlines()]
+serverSentTimes = [str(s) for s in open('serverSent.dat').readlines()]
+
+timeDifferences = []
+sendDifferences = []
+for i in range(min(len(incomingTimes), len(finishedTimes))):
+	incomingTime = int(incomingTimes[i].split(':')[1])
+	finishedTime = int(finishedTimes[i].split(':')[1])
+	sentTime = int(serverSentTimes[i].split(':')[1])
+	timeDifferences.append(finishedTime - incomingTime)
+	sendDifferences.append(incomingTime - sentTime)
+
+print "Time to send serialized message from server to client:"
+print "  Min = " + str(min(sendDifferences))
+print "  Max = " + str(max(sendDifferences))
+print "  Avg = " + str(sum(sendDifferences)/len(sendDifferences))
+	
+print "Client Side Processing: "
+print "  Min = " + str(min(timeDifferences))
+print "  Max = " + str(max(timeDifferences))
+print "  Avg = " + str(sum(timeDifferences)/len(timeDifferences))
+

@@ -29,19 +29,31 @@ namespace NativeClient
         public void ReportMessageReceived(List<JToken> message, int serializedMessageSize)
         {
             string logMessage = "ClientReceivedMessage Class=" + message[0].ToString();
-            if (message[0].ToString().Equals("call"))
+            TimeSpan logTimeSpan = new TimeSpan(DateTime.Now.Ticks);
+            double timeMS = logTimeSpan.TotalMilliseconds;
+
+            if (message[0].ToString().Equals("call-reply"))
+            {
                 logMessage += " FuncName=" + message[2].ToString();
-            logMessage += " MessageID=" + message[1];
-            logMessage += " ReceivedTime=" + (DateTime.Now.Ticks / 1000);
-            logMessage += " Size=" + serializedMessageSize;
-            logger.Debug(logMessage);
+                logMessage += " MessageID=" + message[1];
+                logMessage += " ReceivedTime=" + timeMS;
+                logMessage += " Size=" + serializedMessageSize;
+                logger.Debug(logMessage);
+            }
         }
 
         public void ReportMessageHandlingFinished(List<JToken> message)
         {
-            string logMessage = "ClientFinishedMessageHandling MessageID=" + message[1];
-            logMessage += " FinishedTime=" + (DateTime.Now.Ticks / 1000);
-            logger.Debug(logMessage);
+            string logMessage = "ClientFinishedMessageHandling ";
+            TimeSpan logTimeSpan = new TimeSpan(DateTime.Now.Ticks);
+            double timeMS = logTimeSpan.TotalMilliseconds;
+
+            if (message[0].ToString().Equals("call-reply"))
+            {
+                logMessage += " MessageID=" + message[1];
+                logMessage += " FinishedTime=" + timeMS;
+                logger.Debug(logMessage);
+            }
         }
 
         public void ReportObjectUpdate(CallRequest request)

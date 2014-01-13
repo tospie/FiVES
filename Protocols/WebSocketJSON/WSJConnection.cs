@@ -137,13 +137,19 @@ namespace WebSocketJSON
         private void LogSentMessage(List<object> message, int serializedMessageSize, int serializationTime)
         {
             string logMessage = "SentMessage Class=" + message[0].ToString();
-            if (message[0].Equals("call"))
+            TimeSpan logTimeSpan = new TimeSpan(DateTime.Now.Ticks);
+            double timeMS = logTimeSpan.TotalMilliseconds;
+
+            if (message[0].Equals("call-reply"))
+            {
                 logMessage += " FuncName=" + message[2];
-            logMessage += " MessageID=" + message[1];
-            logMessage += " Size=" + serializedMessageSize;
-            logMessage += " SerializationTime=" + serializationTime;
-            logMessage += " SentTime=" + (DateTime.Now.Ticks / 1000);
-            logger.Debug(logMessage);
+                logMessage += " MessageID=" + message[1];
+                logMessage += " SentTime=" + timeMS;
+                logMessage += " Size=" + serializedMessageSize;
+                logMessage += " SerializationTime=" + serializationTime;
+            
+                logger.Debug(logMessage);
+            }
         }
 
         private void HandleCall(List<JToken> data)
