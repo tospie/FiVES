@@ -119,10 +119,11 @@ FIVES.Communication = FIVES.Communication || {};
     };
 
     var _objectUpdate = function(receivedObjectUpdates) {
-        for(var entry in receivedObjectUpdates) {
-            var handledUpdated = receivedObjectUpdates[entry];
-            var updatedEntity = FIVES.Models.EntityRegistry.getEntity(handledUpdated.entityGuid);
-            updatedEntity.updateAttribute(handledUpdated.componentName, handledUpdated.attributeName, handledUpdated.value);
+        for(var i in receivedObjectUpdates)
+        {
+            var objectUpdate = receivedObjectUpdates[i];
+            var updatedEntity = FIVES.Models.EntityRegistry.getEntity(objectUpdate.entityGuid);
+            updatedEntity.updateAttribute(objectUpdate.componentName, objectUpdate.attributeName, objectUpdate.value);
         }
     }
 
