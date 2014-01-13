@@ -142,6 +142,7 @@ namespace WebSocketJSON
             logMessage += " MessageID=" + message[1];
             logMessage += " Size=" + serializedMessageSize;
             logMessage += " SerializationTime=" + serializationTime;
+            logMessage += " SentTime=" + (DateTime.Now.Ticks / 1000);
             logger.Debug(logMessage);
         }
 

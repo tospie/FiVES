@@ -31,7 +31,9 @@ namespace NativeClient
             string logMessage = "ClientReceivedMessage Class=" + message[0].ToString();
             if (message[0].ToString().Equals("call"))
                 logMessage += " FuncName=" + message[2].ToString();
+            logMessage += " MessageID=" + message[1];
             logMessage += " Size=" + serializedMessageSize;
+            logMessage += " ReceivedTime=" + (DateTime.Now.Ticks / 1000);
             logger.Debug(logMessage);
         }
 
