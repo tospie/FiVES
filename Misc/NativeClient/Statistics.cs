@@ -37,6 +37,13 @@ namespace NativeClient
             logger.Debug(logMessage);
         }
 
+        public void ReportMessageHandlingFinished(List<JToken> message)
+        {
+            string logMessage = "ClientFinishedMessageHandling MessageID=" + message[1];
+            logMessage += " FinishedTime=" + (DateTime.Now.Ticks / 1000);
+            logger.Debug(logMessage);
+        }
+
         public void ReportObjectUpdate(CallRequest request)
         {
             // Go over all updates and extract updates to attribute position.x, which contains the number of ticks

@@ -241,6 +241,7 @@ namespace NativeClient
             {
                 logger.ErrorException("Failed to parse incoming message: " + e.Message, ex);
             }
+            statistics.ReportMessageHandlingFinished(parsedMessage);
         }
 
         /// <summary>
