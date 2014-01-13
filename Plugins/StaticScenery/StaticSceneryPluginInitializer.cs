@@ -64,9 +64,9 @@ namespace StaticSceneryPlugin
             string offsetYConfigValue = config.AppSettings.Settings["offsetY"].Value;
             string offsetZConfigValue = config.AppSettings.Settings["offsetZ"].Value;
 
-            float.TryParse(offsetXConfigValue, out OffsetX);
-            float.TryParse(offsetYConfigValue, out OffsetY);
-            float.TryParse(offsetZConfigValue, out OffsetZ);
+            double.TryParse(offsetXConfigValue, out OffsetX);
+            double.TryParse(offsetYConfigValue, out OffsetY);
+            double.TryParse(offsetZConfigValue, out OffsetZ);
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace StaticSceneryPlugin
         }
 
         internal string SceneryURL = "";
-        internal float OffsetX = 0f;
-        internal float OffsetY = 0f;
-        internal float OffsetZ = 0f;
+        internal double OffsetX = 0f;
+        internal double OffsetY = 0f;
+        internal double OffsetZ = 0f;
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
     }

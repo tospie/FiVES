@@ -247,9 +247,9 @@ namespace MotionPlugin
         /// <param name="updatedEntity">Entity for which motion is updated</param>
         private void UpdateMotion(Entity updatedEntity) {
             Vector velocityInWorldSpace = velocitiesInWorldspace[updatedEntity.Guid];
-            updatedEntity["position"]["x"] = (double)updatedEntity["position"]["x"] + velocityInWorldSpace.x;
+            updatedEntity["position"]["x"] = NativeClient.Timestamps.DoubleMilliseconds;
             updatedEntity["position"]["y"] = (double)updatedEntity["position"]["y"] + velocityInWorldSpace.y;
-            updatedEntity["position"]["z"] = (double)updatedEntity["position"]["z"] + velocityInWorldSpace.z;
+            updatedEntity["position"]["z"] = NativeClient.Timestamps.DoubleMilliseconds;
         }
 
         /// <summary>
@@ -261,18 +261,19 @@ namespace MotionPlugin
             Quat entityRotation = EntityRotationAsQuaternion(updatedEntity);
 
             Vector spinAxis = new Vector();
-            spinAxis.x = (double)updatedEntity["rotVelocity"]["x"];
-            spinAxis.y = (double)updatedEntity["rotVelocity"]["y"];
-            spinAxis.z = (double)updatedEntity["rotVelocity"]["z"];
+            spinAxis.x = (double)System.Math.Min(1.0, (double)updatedEntity["rotVelocity"]["x"]);
+            spinAxis.y = (double)System.Math.Min(1.0, (double)updatedEntity["rotVelocity"]["y"]);
+            spinAxis.z = (double)System.Math.Min(1.0, (double)updatedEntity["rotVelocity"]["z"]);
             double spinAngle = (double)updatedEntity["rotVelocity"]["r"];
 
             Quat spinAsQuaternion = FIVES.Math.QuaternionFromAxisAngle(spinAxis, spinAngle);
 
             Quat newRotationAsQuaternion = FIVES.Math.MultiplyQuaternions(spinAsQuaternion, entityRotation);
-            updatedEntity["orientation"]["x"] = newRotationAsQuaternion.x;
-            updatedEntity["orientation"]["y"] = newRotationAsQuaternion.y;
-            updatedEntity["orientation"]["z"] = newRotationAsQuaternion.z;
-            updatedEntity["orientation"]["w"] = newRotationAsQuaternion.w;
+            // hack here to force attribute update in queue
+            updatedEntity["orientation"]["x"] = NativeClient.Timestamps.DoubleMilliseconds;
+            updatedEntity["orientation"]["y"] = (double)System.Math.Min(1.0, newRotationAsQuaternion.y);
+            updatedEntity["orientation"]["z"] = (double)System.Math.Min(1.0, newRotationAsQuaternion.z);
+            updatedEntity["orientation"]["w"] = (double)System.Math.Min(1.0, newRotationAsQuaternion.w);
         }
 
         /// <summary>
@@ -288,11 +289,10 @@ namespace MotionPlugin
             velocity.z = (double)updatedEntity["velocity"]["z"];
 
             Quat entityRotation = new Quat();
-            entityRotation.x = (double)updatedEntity["orientation"]["x"];
-            entityRotation.y = (double)updatedEntity["orientation"]["y"];
-            entityRotation.z = (double)updatedEntity["orientation"]["z"];
-            entityRotation.w = (double)updatedEntity["orientation"]["w"];
-
+            entityRotation.x = (double)System.Math.Min(1.0, (double)updatedEntity["orientation"]["x"]);
+            entityRotation.y = (double)System.Math.Min(1.0, (double)updatedEntity["orientation"]["y"]);
+            entityRotation.z = (double)System.Math.Min(1.0, (double)updatedEntity["orientation"]["z"]);
+            entityRotation.w = (double)System.Math.Min(1.0, (double)updatedEntity["orientation"]["w"]);
             Vector axis = FIVES.Math.AxisFromQuaternion(entityRotation);
             double angle = FIVES.Math.AngleFromQuaternion(entityRotation);
 

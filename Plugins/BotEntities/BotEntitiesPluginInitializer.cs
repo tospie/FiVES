@@ -46,8 +46,8 @@ namespace BotEntitiesPlugin
 
             int.TryParse(ConfigurationManager.AppSettings["numBots"], out numBots);
             botMesh = ConfigurationManager.AppSettings["botMesh"];
-            float.TryParse(ConfigurationManager.AppSettings["walkSpeed"], out botWalkSpeed);
-            float.TryParse(ConfigurationManager.AppSettings["rotateSpeed"], out botRotateSpeed);
+            double.TryParse(ConfigurationManager.AppSettings["walkSpeed"], out botWalkSpeed);
+            double.TryParse(ConfigurationManager.AppSettings["rotateSpeed"], out botRotateSpeed);
             int.TryParse(ConfigurationManager.AppSettings["updateInterval"], out botUpdateInterval);
         }
 
@@ -56,14 +56,14 @@ namespace BotEntitiesPlugin
             for (var i = 0; i < numBots; i++)
             {
                 Entity botEntity = new Entity();
-                botEntity["position"]["x"] = 0.0f;
-                botEntity["position"]["y"] = 0.0f;
-                botEntity["position"]["z"] = 0.0f;
+                botEntity["position"]["x"] = 0.0;
+                botEntity["position"]["y"] = 0.0;
+                botEntity["position"]["z"] = 0.0;
 
-                botEntity["rotVelocity"]["x"] = 0f;
-                botEntity["rotVelocity"]["y"] = 1f;
-                botEntity["rotVelocity"]["z"] = 0f;
-                botEntity["rotVelocity"]["r"] = 0f;
+                botEntity["rotVelocity"]["x"] = 0.0;
+                botEntity["rotVelocity"]["y"] = 1.0;
+                botEntity["rotVelocity"]["z"] = 0.0;
+                botEntity["rotVelocity"]["r"] = 0.0;
 
                 botEntity["meshResource"]["uri"] = botMesh;
                 FIVES.World.Instance.Add(botEntity);
@@ -89,9 +89,9 @@ namespace BotEntitiesPlugin
 
         private void ChangeMoveSpeed(Entity botEntity)
         {
-            if ((float)botEntity["velocity"]["x"] == botWalkSpeed)
+            if ((double)botEntity["velocity"]["x"] == botWalkSpeed)
             {
-                botEntity["velocity"]["x"] = 0.0f;
+                botEntity["velocity"]["x"] = 0.0;
                 StopWalkAnimation(botEntity);
             }
             else
@@ -117,7 +117,7 @@ namespace BotEntitiesPlugin
             }
             else
             {
-                botEntity["rotVelocity"]["r"] = 0f;
+                botEntity["rotVelocity"]["r"] = 0.0;
                 StopWalkAnimation(botEntity);
             }
         }
@@ -133,15 +133,15 @@ namespace BotEntitiesPlugin
 
         private void StopWalkAnimation(Entity botEntity)
         {
-            if ((float)botEntity["velocity"]["x"] == 0f && (float)botEntity["rotVelocity"]["r"] == 0f)
+            if ((double)botEntity["velocity"]["x"] == 0.0 && (double)botEntity["rotVelocity"]["r"] == 0.0)
                 KeyframeAnimationManager.Instance.StopAnimation(botEntity.Guid, "walk");
         }
 
         private int numBots = 40;
         private HashSet<Entity> bots = new HashSet<Entity>();
         private string botMesh = "/models/natalieFives/xml3d/natalie.xml";
-        private float botWalkSpeed = 0.05f;
-        private float botRotateSpeed = 0.05f;
+        private double botWalkSpeed = 0.05;
+        private double botRotateSpeed = 0.05;
         private int millisecondsSinceLastTick = 0;
         private int botUpdateInterval = 5000;
         private Random random = new Random();
