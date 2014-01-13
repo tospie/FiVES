@@ -45,4 +45,7 @@ cat Clients.log | grep QueueProcessingTime | sed 's/.*QueueProcessingTime=\([0-9
 cat Clients.log | grep ClientReceivedMessage | sed 's/\([^ ]*\) .*ClientReceivedMessage CallID=\([0-9]*\) .*/\1 \2/' > clientReceived.dat
 cat FIVES.log | grep SentMessage | sed 's/\([^ ]*\) .*SentMessage CallID=\([0-9]*\) .*/\1 \2/' > serverSent.dat
 ./processDelay_attributes.py
+
+cat Clients.log grep ClientFinishedMessageHandling | sed 's/.*MessageID=\([0-9]*\) FinishedTime=\([0-9\.]*\).*/\2/' > finishedTime.dat
+cat Clients.log | grep MessageReceived | sed 's/.*MessageID=\([0-9]*\)[. ]* ReceivedTime=\([0-9\.]*\).*/\2/' > receivedTime.dat
 echo "Done."
