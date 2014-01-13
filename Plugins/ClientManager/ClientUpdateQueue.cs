@@ -76,6 +76,11 @@ namespace ClientManagerPlugin
                     update.value = Timestamps.DoubleMilliseconds - (double)update.value;
                     UpdateQueue[i] = update;
                 }
+                if (update.componentName == "orientation" && update.attributeName == "x")
+                {
+                    update.value = UpdateQueue.Count;
+                    UpdateQueue[i] = update;
+                }
             }
 
             lock (CallbackRegistryLock)

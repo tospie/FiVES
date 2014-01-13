@@ -50,9 +50,10 @@ namespace NativeClient
                     {
                         double startTimestampMs = attributeValue;
                         double endTimestampMs = Timestamps.DoubleMilliseconds;
-                        logger.Info("UpdateDelayMs=" + (endTimestampMs - startTimestampMs) +
-                            " StartTimeStamp=" + startTimestampMs +
-                                    " EndTimeStamp=" + endTimestampMs);
+                        double delay = endTimestampMs - startTimestampMs;
+                            logger.Info("UpdateDelayMs=" + (delay) +
+                                " StartTimeStamp=" + startTimestampMs +
+                                        " EndTimeStamp=" + endTimestampMs);
                     }
                     else if (attributeName == "y")
                     {
@@ -64,6 +65,16 @@ namespace NativeClient
                     {
                         double queueProcessingTime = attributeValue;
                         logger.Info("QueueProcessingTime=" + queueProcessingTime);
+                    }
+                }
+
+                if (update["componentName"].ToString() == "orientation")
+                {
+                    var attributeName = update["attributeName"].ToString();
+                    var attributeValue = update["value"].ToObject<double>();
+                    if (attributeName == "x")
+                    {
+                        logger.Info("Queue Length: " + attributeValue);
                     }
                 }
             }
