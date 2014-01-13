@@ -59,12 +59,16 @@ namespace NativeClient
                     {
                         double updateDelay = attributeValue;
                         if (updateDelay == 1e-06) updateDelay = 0.0;
-                        logger.Info("DelayToAttributeUpdate=" + updateDelay);
+                        // hack to filter out update delays of server invoked updates, e.g. from motion
+                        if (updateDelay >= 0 && updateDelay < 10000)
+                            logger.Info("DelayToAttributeUpdate=" + updateDelay);
                     }
                     else if (attributeName == "z")
                     {
                         double queueProcessingTime = attributeValue;
-                        logger.Info("QueueProcessingTime=" + queueProcessingTime);
+                        // hack to filter out update delays of server invoked updates, e.g. from motion
+                        if (queueProcessingTime >= 0 && queueProcessingTime < 10000)
+                            logger.Info("QueueProcessingTime=" + queueProcessingTime);
                     }
                 }
 
