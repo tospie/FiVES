@@ -78,7 +78,7 @@ namespace NativeClient
 
             TimeDelayEstimator estimator = new TimeDelayEstimator(communicator);
             estimator.TimeDelayEstimated += HandleTimeDelayEstimated;
-            estimator.StartEstimating(100);
+            estimator.StartEstimating(0);
         }
 
         void HandleTimeDelayEstimated (object sender, TimeDelayEventArgs e)
@@ -138,6 +138,8 @@ namespace NativeClient
             info.Position.x = Timestamps.DoubleMilliseconds;
             communicator.Call("location.updatePosition", info.Guid, info.Position, Timestamps.UnixTimestamp);
             logger.Info("ClientSentUpdate TimeStamp=" + info.Position.x);
+
+            //logger.Info("ClientSentUpdate TimeStamp=" + info.Position.x);
         }
 
         void MoveLocallyCreatedEntities()

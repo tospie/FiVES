@@ -118,7 +118,7 @@ namespace NativeClient
 
         private void HandleUpdate(CallRequest request)
         {
-            statistics.ReportObjectUpdate(request);
+         //   statistics.ReportObjectUpdate(request);
         }
 
         private void RequestAllObjects()
