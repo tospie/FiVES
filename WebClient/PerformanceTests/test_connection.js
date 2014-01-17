@@ -79,9 +79,9 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     };
 
     c.handleUpdate = function(handledUpdate) {
+        this.receivedMessages ++;
         if(handledUpdate.entityGuid == this.createdEntityGuid)
         {
-            this.receivedMessages ++;
             if(handledUpdate.componentName == "position")
             {
                 switch(handledUpdate.attributeName)
