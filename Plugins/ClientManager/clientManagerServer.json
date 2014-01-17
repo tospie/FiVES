@@ -4,8 +4,8 @@
   "servers": [{
     "services": "*",
     "protocol": {
-      "name": "binary-protocol",
-      "port": 34838,
+      "name": "websocket-json",
+      "port": 34837,
     }
   }]
 }
