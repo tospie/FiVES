@@ -76,6 +76,13 @@ namespace ClientManagerPlugin
                     update.value = UpdateQueue.Count;
                     UpdateQueue[i] = update;
                 }
+
+                if (update.componentName == "position" && update.attributeName == "z")
+                {
+                    // Measure time from entering to leaving the queue
+                    update.value = Timestamps.DoubleMilliseconds - (double)update.value;
+                    UpdateQueue[i] = update;
+                }
             }
 
             lock (CallbackRegistryLock)
@@ -185,7 +192,10 @@ namespace ClientManagerPlugin
             newUpdateInfo.entityGuid = entity.Guid;
             newUpdateInfo.componentName = e.Component.Name;
             newUpdateInfo.attributeName = e.AttributeName;
-            newUpdateInfo.value = e.NewValue;
+            if (e.Component.Name == "position" && e.AttributeName == "z")
+                newUpdateInfo.value = Timestamps.DoubleMilliseconds; // measure time when update entered the queue
+            else
+                newUpdateInfo.value = e.NewValue;
             return newUpdateInfo;
         }
 
