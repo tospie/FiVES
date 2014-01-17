@@ -8,7 +8,7 @@
  */
 
 var FIVES = FIVES || {};
-FIVES.Communication = FIVES.Communication || {};
+FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
 ( function(){
     "use strict";
