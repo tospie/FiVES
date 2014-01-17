@@ -1,0 +1,12 @@
+{
+  "info": "TestServer",
+  "idlURL": "kiara/fives.kiara",
+  "servers": [{
+    "services": "*",
+    "protocol": {
+      "name": "websocket-json",
+      "port": 34837,
+      "host": "127.0.0.1"
+    }
+  }]
+}
