@@ -13,7 +13,9 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 ( function(){
     "use strict";
 
-    var FivesCommunicator = function() {};
+    var FivesCommunicator = function(connection) {
+        this.testConnection = connection;
+    };
     var c = FivesCommunicator.prototype;
 
     // Function wrappers for KIARA interface provided by FIVES server
@@ -28,9 +30,9 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     c.notifyAboutLocationOfEntityChanged = function() {};
 
 
-    c.initialize = function(context, service) {
-        this.context = context;
-        context.openConnection(service, _onOpenedConnection.bind(this) );
+    c.initialize = function() {
+        this.context = FIVES.WebclientTestsuite.kiaraContext;
+        this.context.openConnection(FIVES.WebclientTestsuite.kiaraService, _onOpenedConnection.bind(this) );
     };
 
     // Attempts to authenticate. The `callback` is executed as a function with one argument - true if client was
@@ -45,7 +47,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
         }
 
         var reportFailure = function(message) {
-            callback(false, message);
+            console.error(message);
         };
 
         var loginCallback = function(result) {
@@ -79,31 +81,9 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     c.connect = function(callback) {
         var self = this;
 
-        var requiredServices = ["kiara", "objectsync", "editing", "avatar"];
-        var reportFailure = function(message) {
-            callback(false, message);
-        };
-
-        var implementsCallback = function(error, result) {
-            if (error) {
-                reportFailure("Failed to request supported services on the server.");
-            } else {
-                for (var i in result) {
-                    if (result[i] !== true) {
-                        reportFailure("Server does not support required service: " + requiredServices[i] + ".");
-                        return;
-                    }
-                }
-
-                _createFunctionWrappers.call(self);
-                self.connectedTime = new Date().getTime();
-                callback(true);
-            }
-        };
-
-        this.implements(requiredServices)
-            .on("result", implementsCallback)
-            .on("error", reportFailure.bind(null, "Failed to request supported services on the server."));
+        _createFunctionWrappers.call(self);
+        self.connectedTime = new Date().getTime();
+        callback();
     }
 
     var _onOpenedConnection = function(error, conn) {
@@ -115,15 +95,13 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     };
 
     var _listObjectsCallback =  function(error, objects) {
-        for (var i = 0; i < objects.length; i++)
-            FIVES.Models.EntityRegistry.addEntityFromServer(objects[i]);
+
     };
 
     var _objectUpdate = function(receivedObjectUpdates) {
         for(var entry in receivedObjectUpdates) {
-            var handledUpdated = receivedObjectUpdates[entry];
-            var updatedEntity = FIVES.Models.EntityRegistry.getEntity(handledUpdated.entityGuid);
-            updatedEntity.updateAttribute(handledUpdated.componentName, handledUpdated.attributeName, handledUpdated.value);
+            var handledUpdate = receivedObjectUpdates[entry];
+            this.testConnection.handleUpdate(handledUpdate);
         }
     }
 
@@ -143,12 +121,12 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
         this.notifyAboutNewObjects = this.connection.generateFuncWrapper("objectsync.notifyAboutNewObjects");
 
         // TODO: Employ correct entityregistry here
-        this.notifyAboutNewObjects(this.sessionKey, FIVES.Models.EntityRegistry.addEntityFromServer.bind(FIVES.Models.EntityRegistry));
+        //this.notifyAboutNewObjects(this.sessionKey, FIVES.Models.EntityRegistry.addEntityFromServer.bind(FIVES.Models.EntityRegistry));
 
         this.notifyAboutObjectUpdates = this.connection.generateFuncWrapper("objectsync.notifyAboutObjectUpdates");
 
         // TODO: Employ callback function that evaluates the roundtrip times (similar to native client)
-        this.notifyAboutObjectUpdates(this.sessionKey, _objectUpdate);
+        this.notifyAboutObjectUpdates(_objectUpdate.bind(this));
 
         this.updateEntityPosition = this.connection.generateFuncWrapper("location.updatePosition");
         this.updateEntityOrientation = this.connection.generateFuncWrapper("location.updateOrientation");
@@ -176,10 +154,12 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
         */
         this.listObjects().on("result", _listObjectsCallback.bind(this));
 
+        /*
         var getEntityGuidCall = this.getAvatarEntityGuid(this.sessionKey);
         getEntityGuidCall.on("success", function(avatarEntityGuid) {
            FIVES.AvatarEntityGuid = avatarEntityGuid;
         });
+        */
     };
 
     c.sendEntityPositionUpdate = function(guid, position) {
@@ -190,7 +170,8 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
         this.updateEntityOrientation(this.sessionKey, guid, orientation, this._generateTimestamp());
     };
 
-    // Expose Communicator to namespace
-    FIVES.Communication.FivesCommunicator = new FivesCommunicator();
+    // Expose Communicator to namespace. For the test suite, this is no singleton, as we want to create many connections
+    // from within the same browser tab
+    FIVES.WebclientTestsuite.FivesCommunicator = FivesCommunicator;
 
 }());
