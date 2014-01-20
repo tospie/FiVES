@@ -46,7 +46,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     };
 
     c.createPlaceholderDiv = function(i) {
-        var positionY = 50 + (i-1) * PLOT_HEIGHT;
+        var positionY = 105 + (i-1) * PLOT_HEIGHT;
         this.placeholderID = "plot" + i;
 
         var placeholderDiv = $('<div id="' + this.placeholderID + '"' +
@@ -102,24 +102,11 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
     c.finishExperiment = function() {
         window.clearInterval(this._updateIntervalHandler);
-        var roundtripAv = this.getAverage(this.RoundtripDelays);
-        $.plot($("#" + this.placeholderID),[
-            { label: "Client " + this.clientNumber, data: this.RoundtripDelays, lines: {show: true, fill: true}},
-            { label: "Incoming Proc.", data: this.DelaysToAttribute, lines: {show: true}},
-            { label: "Queue time", data: this.QueueProcessing, lines: {show: true}},
-            { label: "Avg: " + roundtripAv, data: [[0, roundtripAv], [this.RoundtripDelays.length, roundtripAv]],
-                lines: {show: true}}
-        ], {yaxis: {max: roundtripAv*4}});
 
-        FIVES.WebclientTestsuite.CollectResults(this.receivedMessages);
-    };
-
-    c.getAverage = function(measurement) {
-        var accumulatedValue = 0;
-        for(var i = 0; i < measurement.length; i++) {
-            accumulatedValue += measurement[i][1];
-        }
-        return (accumulatedValue / measurement.length);
+        FIVES.WebclientTestsuite.CollectResults(this.receivedMessages,
+            this.RoundtripDelays,
+            this.DelaysToAttribute,
+            this.QueueProcessing);
     };
 
     FIVES.WebclientTestsuite.testConnection = testConnection;
