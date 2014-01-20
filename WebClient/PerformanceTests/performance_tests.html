@@ -13,6 +13,13 @@
     <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
-    <div id="resultText" style="position: absolute; top: 5px; left: 5px;"></div>
+    <form>
+        Number of clients : <input id="clients" type="text" size = "1" value = "10">
+        Message Interval : <input id="interval" type="text" size = "1" value = "100"> ms;
+        Experiment runtime: <input id="runtime" type="text"  size = "1"  value = "60"> Seconds
+        <input type="button" value="Run Test" onclick="FIVES.WebclientTestsuite.InvokeStart();">
+
+    </form>
+    <div id="resultText" style="position: absolute; top: 60px; left: 5px;">RESULTS</div>
 </body>
 </html>
