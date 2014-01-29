@@ -66,12 +66,12 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     };
 
     var plotResults = function() {
-        for(var i = 1; i <= FIVES.WebclientTestsuite.N_TOTAL_CLIENTS; i++)
+        for(var i = 0; i < FIVES.WebclientTestsuite.N_TOTAL_CLIENTS; i++)
         {
-            var placeholderID = "plot" + i;
+            var placeholderID = "plot" + (i+1);
             var roundtripAv = getAverage(FIVES.WebclientTestsuite.RoundtripDelays[i]);
             $.plot($("#" + placeholderID),[
-                { label: "Client " + i, data: FIVES.WebclientTestsuite.RoundtripDelays[i], lines: {show: true, fill: true}},
+                { label: "Client " + (i+1), data: FIVES.WebclientTestsuite.RoundtripDelays[i], lines: {show: true, fill: true}},
                 { label: "Incoming Proc.", data: FIVES.WebclientTestsuite.DelaysToAttribute[i], lines: {show: true}},
                 { label: "Queue time", data: FIVES.WebclientTestsuite.QueueProcessing[i], lines: {show: true}},
                 { label: "Avg: " + roundtripAv, data: [[0, roundtripAv], [FIVES.WebclientTestsuite.RoundtripDelays[i].length, roundtripAv]],
