@@ -15,7 +15,8 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     "use strict";
     var PLOT_HEIGHT = 150;
 
-    var timestampReferenceDate = new Date(2013, 11, 4, 19, 50, 0).getTime();
+    var today = new Date();
+    var timestampReferenceDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0).getTime();
 
     var testConnection = function(n) {
 
@@ -90,7 +91,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
                         _generateTimestamp() - handledUpdate.value]);
                         break;
                     case 'y': this.DelaysToAttribute.push([this.DelaysToAttribute.length,
-                        handledUpdate.value + 9]); // 9 here is estimated difference to server
+                        handledUpdate.value ]);
                         break;
                     case 'z': this.QueueProcessing.push([this.QueueProcessing.length,
                         handledUpdate.value]);
