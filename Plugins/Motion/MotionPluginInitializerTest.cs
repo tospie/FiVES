@@ -109,7 +109,7 @@ namespace MotionPlugin
                                                w = (float) e["orientation"]["w"]};
 
             Vector axisAfterSpin = FIVES.Math.AxisFromQuaternion(entityOrientation);
-            float angleAfterSpin = FIVES.Math.AngleFromQuaternion(entityOrientation);
+            double angleAfterSpin = FIVES.Math.AngleFromQuaternion(entityOrientation);
 
             Assert.Less(System.Math.Abs(1f - axisAfterSpin.x), 0.00001f);
             Assert.Less(System.Math.Abs(axisAfterSpin.y), 0.00001f);
