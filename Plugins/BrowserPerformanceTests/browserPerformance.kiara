@@ -1,0 +1,4 @@
+﻿service browserPerformance {
+	void invokeRoundtrip(string entityGuid, double timeStamp);
+}
+
