@@ -113,25 +113,15 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
     var _createFunctionWrappers = function(error, supported) {
         this.listObjects = this.connection.generateFuncWrapper("objectsync.listObjects");
-
         this.createEntityAt = this.connection.generateFuncWrapper("editing.createEntityAt");
-        this.createMeshEntity = this.connection.generateFuncWrapper("editing.createMeshEntity");
-        this.createServerScriptFor = this.connection.generateFuncWrapper("scripting.createServerScriptFor");
-
-        this.notifyAboutNewObjects = this.connection.generateFuncWrapper("objectsync.notifyAboutNewObjects");
-
+        this.invokeRoundtripTest = this.connection.generateFuncWrapper("browserPerformance.invokeRoundtrip");
         // TODO: Employ correct entityregistry here
         //this.notifyAboutNewObjects(this.sessionKey, FIVES.Models.EntityRegistry.addEntityFromServer.bind(FIVES.Models.EntityRegistry));
 
-        this.notifyAboutObjectUpdates = this.connection.generateFuncWrapper("objectsync.notifyAboutObjectUpdates");
-
-        // TODO: Employ callback function that evaluates the roundtrip times (similar to native client)
-        this.notifyAboutObjectUpdates(_objectUpdate.bind(this));
-
-        this.updateEntityPosition = this.connection.generateFuncWrapper("location.updatePosition");
-        this.updateEntityOrientation = this.connection.generateFuncWrapper("location.updateOrientation");
-
-        this.updateMotion = this.connection.generateFuncWrapper("motion.update");
+        this.connection.registerFuncImplementation("objectsync.receiveObjectUpdates",
+            null, _objectUpdate.bind(this));
+        this.connection.registerFuncImplementation("objectsync.receiveNewObjects",
+            null, function(newObject) {});
 
         // TODO: Check which of these handlers are actually still needed for performance tests
         /*
@@ -160,14 +150,6 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
            FIVES.AvatarEntityGuid = avatarEntityGuid;
         });
         */
-    };
-
-    c.sendEntityPositionUpdate = function(guid, position) {
-        this.updateEntityPosition(this.sessionKey, guid, position, this._generateTimestamp());
-    };
-
-    c.sendEntityOrientationUpdate = function(guid, orientation) {
-        this.updateEntityOrientation(this.sessionKey, guid, orientation, this._generateTimestamp());
     };
 
     // Expose Communicator to namespace. For the test suite, this is no singleton, as we want to create many connections

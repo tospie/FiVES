@@ -72,30 +72,30 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     };
 
     c.updateEntityPosition = function() {
-        this.communicator.updateEntityPosition(this.createdEntityGuid,
-            {x: _generateTimestamp(), // Current timestamp to measure time the message was actually sent
-             y: 0, // y and z values will be set during server side processing
-             z: 0},
-            0);
+        var timestamp = _generateTimestamp();
+        this.communicator.invokeRoundtripTest(this.createdEntityGuid,timestamp);
     };
 
     c.handleUpdate = function(handledUpdate) {
         this.receivedMessages ++;
         if(handledUpdate.entityGuid == this.createdEntityGuid)
         {
-            if(handledUpdate.componentName == "position")
+            if(handledUpdate.componentName == "performanceTest")
             {
                 switch(handledUpdate.attributeName)
                 {
-                    case 'x': this.RoundtripDelays.push([this.RoundtripDelays.length,
+                    case "roundtripTimestamp":
+                        this.RoundtripDelays.push([this.RoundtripDelays.length,
                         _generateTimestamp() - handledUpdate.value]);
                         break;
+                    /* Re-Add these tests later, if needed
                     case 'y': this.DelaysToAttribute.push([this.DelaysToAttribute.length,
                         handledUpdate.value ]);
                         break;
                     case 'z': this.QueueProcessing.push([this.QueueProcessing.length,
                         handledUpdate.value]);
                         break;
+                     */
                 }
             }
         }
