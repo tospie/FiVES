@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrokerHost
+namespace BrokerHostPlugin
 {
     public class BrokerHostPluginInitializer : IPluginInitializer
     {
