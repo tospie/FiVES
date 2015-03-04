@@ -26,12 +26,14 @@ namespace BrokerHostPlugin
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            Broker = BrokerHost.Instance;
         }
 
         public void Shutdown()
         {
             throw new NotImplementedException();
         }
+
+        public static BrokerHost Broker;
     }
 }
