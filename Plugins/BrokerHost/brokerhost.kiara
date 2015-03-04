@@ -1,1 +1,13 @@
-﻿
+﻿/* * Broker Host service that provides methods for FiVES instances to register
+// themselves as world servers and to request the least busy world server from
+// broker. Clients will always connect to the Broker first, then receive the URI
+// of the least busy server, and then connect to that server before disconnecting
+// from the Broker again
+*/
+service broker {
+	void RegisterAsWorldServer(string uri); // called by a World Server to introduce itself
+	void ClientConnected(string uri); // called by World Server to notify Broker that a client connected
+	void ClientDisonnected(string uri); // called by World Server to notify Broker that a client disconnected
+	string getLeastBusyServer(); // called by Client upon establishing connection to learn which World Server it should connect to
+}
+
