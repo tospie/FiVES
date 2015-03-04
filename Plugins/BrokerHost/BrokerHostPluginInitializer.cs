@@ -31,7 +31,7 @@ namespace BrokerHostPlugin
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
+
         }
 
         public static BrokerHost Broker;
