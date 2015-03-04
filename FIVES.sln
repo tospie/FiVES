@@ -83,6 +83,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Light", "Plugins\Light\Ligh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerHost", "Plugins\BrokerHost\BrokerHost.csproj", "{F3A4736B-4B68-4A90-9048-F2AE45A407C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerClient", "Plugins\BrokerClient\BrokerClient.csproj", "{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -222,6 +224,11 @@ Global
 		{F3A4736B-4B68-4A90-9048-F2AE45A407C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3A4736B-4B68-4A90-9048-F2AE45A407C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3A4736B-4B68-4A90-9048-F2AE45A407C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A4736B-4B68-4A90-9048-F2AE45A407C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,6 +278,7 @@ Global
 		{6C4C01E3-2F44-462F-BF63-A9D5D288C662} = {8E636E4B-A4AB-44B2-A2D4-821E73CCA455}
 		{D5B8E5D2-A427-4985-B885-9EAC5BDDAB06} = {C73EDE56-1E63-400F-A694-9158687895DD}
 		{F3A4736B-4B68-4A90-9048-F2AE45A407C5} = {C73EDE56-1E63-400F-A694-9158687895DD}
+		{2B04ACFE-4FE0-47E1-8B14-4D5E6842B457} = {C73EDE56-1E63-400F-A694-9158687895DD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Core\FIVES\FIVES.csproj
