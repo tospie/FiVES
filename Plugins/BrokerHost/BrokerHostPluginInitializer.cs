@@ -16,7 +16,7 @@ namespace BrokerHostPlugin
 
         public List<string> PluginDependencies
         {
-            get { return new List<string>(); }
+            get { return new List<string>{"ClientManager", "KIARA"}; }
         }
 
         public List<string> ComponentDependencies
