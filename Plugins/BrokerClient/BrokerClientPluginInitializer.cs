@@ -5,33 +5,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrokerClientPlguin
+namespace BrokerClientPlugin
 {
     public class BrokerClientPluginInitializer : IPluginInitializer
     {
         public string Name
         {
-            get { throw new NotImplementedException(); }
+            get { return "BrokerClient"; }
         }
 
         public List<string> PluginDependencies
         {
-            get { throw new NotImplementedException(); }
+            get { return new List<string>{"ClientManager", "KIARA"}; }
         }
 
         public List<string> ComponentDependencies
         {
-            get { throw new NotImplementedException(); }
+            get { return new List<string>(); }
         }
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            Client = BrokerClient.Instance;
         }
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
+
         }
+
+        public static BrokerClient Client;
     }
 }
