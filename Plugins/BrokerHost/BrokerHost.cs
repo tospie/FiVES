@@ -1,4 +1,5 @@
-﻿using ClientManagerPlugin;
+﻿using BrokerClientPlugin;
+using ClientManagerPlugin;
 using KIARAPlugin;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,7 @@ namespace BrokerHostPlugin
         private void RegisterAsWorldServer(string uri)
         {
             Servers.Add(new WorldServer { Uri = uri, ConnectedClients = 0 });
+            BrokerClient.Instance.ConnectToRemoteServer(uri);
         }
 
         private void ClientConnectedToWorld(string uri)

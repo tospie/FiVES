@@ -96,6 +96,10 @@
       <Project>{6c4c01e3-2f44-462f-bf63-a9d5d288c662}</Project>
       <Name>ServiceBus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BrokerClient\BrokerClient.csproj">
+      <Project>{2b04acfe-4fe0-47e1-8b14-4d5e6842b457}</Project>
+      <Name>BrokerClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClientManager\ClientManager.csproj">
       <Project>{e1955ff2-6109-4c71-9f13-486a48de6c17}</Project>
       <Name>ClientManager</Name>
