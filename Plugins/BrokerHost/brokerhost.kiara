@@ -5,9 +5,9 @@
 // from the Broker again
 */
 service broker {
-	void RegisterAsWorldServer(string uri); // called by a World Server to introduce itself
-	void ClientConnected(string uri); // called by World Server to notify Broker that a client connected
-	void ClientDisonnected(string uri); // called by World Server to notify Broker that a client disconnected
+	void registerAsWorldServer(string uri); // called by a World Server to introduce itself
+	void clientConnected(string uri); // called by World Server to notify Broker that a client connected
+	void clientDisonnected(string uri); // called by World Server to notify Broker that a client disconnected
 	string getLeastBusyServer(); // called by Client upon establishing connection to learn which World Server it should connect to
 }
 
