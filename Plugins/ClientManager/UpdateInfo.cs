@@ -22,6 +22,7 @@ namespace ClientManagerPlugin
     public struct UpdateInfo
     {
         public string entityGuid;
+        public string entityOwner;
         public string componentName;
         public string attributeName;
         //public int timeStamp; /* not used yet */
