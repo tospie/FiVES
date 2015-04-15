@@ -44,9 +44,10 @@ namespace BrokerClientPlugin
             clientService.OnConnected += OnEstablishedConnection;
         }
 
-        private void OnEstablishedConnection(Connection connection)
+        public void AssignOutgoingToIncomingConnection(Guid incomingSession, Guid outgoingSession)
         {
-            BrokerConnection = connection;
+            outgoingSessionIDs[incomingSession] = outgoingSession;
+        }
 
             BrokerConnection.RegisterFuncImplementation("objectsync.receiveNewObjects",
                 (Action<Dictionary<string, object>>)HandleNewEntityAdded);
@@ -120,10 +121,15 @@ namespace BrokerClientPlugin
             string localGuidAsString = World.Instance.ID.ToString();
             foreach (UpdateInfo update in ReceivedUpdate)
             {
-                if (!update.entityOwner.Equals(localGuidAsString) && !update.changedBy.Equals(localGuidAsString))
+                if (!update.entityOwner.Equals(localGuidAsString))
                 {
                     var entity = World.Instance.FindEntity(update.entityGuid);
-                    entity[update.componentName][update.attributeName].Suggest(update.value, connection.SessionID);
+                    var outgoingId =
+                        outgoingSessionIDs.ContainsKey(connection.SessionID)
+                        ? outgoingSessionIDs[connection.SessionID]
+                        : connection.SessionID;
+
+                    entity[update.componentName][update.attributeName].Suggest(update.value, outgoingId);
                 }
             }
         }
@@ -131,5 +137,6 @@ namespace BrokerClientPlugin
         private ServiceWrapper clientService;
         private Connection BrokerConnection;
         private string remoteBrokerURL;
+        private Dictionary<Guid, Guid> outgoingSessionIDs = new Dictionary<Guid,Guid>();
     }
 }
