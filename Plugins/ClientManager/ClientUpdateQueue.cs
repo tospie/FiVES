@@ -14,6 +14,7 @@
 // along with FiVES.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FIVES;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,8 +74,10 @@ namespace ClientManagerPlugin
         {
             lock (CallbackRegistryLock)
             {
-                foreach (ClientFunction callback in ClientCallbacks.Values)
-                    callback(UpdateQueue);
+                foreach (KeyValuePair<Connection, ClientFunction> registeredCallback in ClientCallbacks)
+                {
+                    registeredCallback.Value(UpdateQueue.Where(update => !update.changedBy.Equals(registeredCallback.Key.SessionID.ToString())));
+                }
             }
         }
 
