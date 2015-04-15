@@ -85,7 +85,11 @@ namespace BrokerClientPlugin
 
         private void HandleNewEntityAdded(Dictionary<string, object> EntityInfo)
         {
-            if (EntityInfo["guid"] == null || EntityInfo["owner"] == null || EntityInfo["owner"].Equals(World.Instance.ID.ToString()))
+            if (EntityInfo["guid"] == null
+                || EntityInfo["owner"] == null
+                || EntityInfo["owner"].Equals(World.Instance.ID.ToString())
+                || World.Instance.ContainsEntity(new Guid((string)EntityInfo["guid"]))
+                )
                 return;
             Entity receivedEntity = new Entity(new Guid((string)EntityInfo["guid"]), new Guid((string)EntityInfo["owner"]));
             foreach (KeyValuePair<string, object> entityComponent in EntityInfo)
