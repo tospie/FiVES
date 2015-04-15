@@ -176,7 +176,7 @@ namespace ServerSyncPlugin
             World.Instance.Add(entity);
 
             var worldSync = new WorldSync();
-            worldSync.HandleLocalChangedAttribute(this, new ChangedAttributeEventArgs(entity["test"], "a", 33, 55));
+            worldSync.HandleLocalChangedAttribute(this, new ChangedAttributeEventArgs(entity["test"], "a", 33, 55, World.Instance.ID));
 
             handlers.Verify(h => h.ChangeAttributes(entity.Guid, It.Is<EntitySyncInfo>(esi =>
                 esi.Components.Count == 1 &&
