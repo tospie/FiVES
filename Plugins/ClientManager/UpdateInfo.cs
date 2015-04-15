@@ -23,6 +23,7 @@ namespace ClientManagerPlugin
     {
         public string entityGuid;
         public string entityOwner;
+        public string changedBy;
         public string componentName;
         public string attributeName;
         //public int timeStamp; /* not used yet */

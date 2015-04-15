@@ -10,6 +10,7 @@ service auth {
 struct UpdateInfo {
 	string entityGuid;
 	string entityOwner;
+	string changedBy;
 	string componentName;
 	string attributeName;
 	any value;

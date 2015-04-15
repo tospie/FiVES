@@ -177,6 +177,7 @@ namespace ClientManagerPlugin
             UpdateInfo newUpdateInfo = new UpdateInfo();
             newUpdateInfo.entityGuid = entity.Guid.ToString();
             newUpdateInfo.entityOwner = entity.Owner.ToString();
+            newUpdateInfo.changedBy = e.ChangedBy.ToString();
             newUpdateInfo.componentName = e.Component.Name;
             newUpdateInfo.attributeName = e.AttributeName;
             newUpdateInfo.value = e.NewValue;
