@@ -1,5 +1,6 @@
 ﻿using BrokerClientPlugin;
 using ClientManagerPlugin;
+using KIARA;
 using KIARAPlugin;
 using System;
 using System.Collections.Generic;
@@ -33,17 +34,21 @@ namespace BrokerHostPlugin
             string idlContents = File.ReadAllText("brokerhost.kiara");
             KIARAServerManager.Instance.KiaraServer.AmendIDL(idlContents);
             ClientManager.Instance.RegisterClientService("broker", false, new Dictionary<string, Delegate>{
-                {"registerAsWorldServer", (Action<string>)RegisterAsWorldServer},
+                {"registerAsWorldServer", (Action<Connection, string>)RegisterAsWorldServer},
                 {"clientConnected", (Action<string>)ClientConnectedToWorld},
                 {"clientDisconnected", (Action<string>)ClientDisconnectedFromWorld},
                 {"getLeastBusyServer", (Func<string>)GetLeastBusyServer}
             });
         }
 
-        private void RegisterAsWorldServer(string uri)
+        private void RegisterAsWorldServer(Connection connection, string uri)
         {
             Servers.Add(new WorldServer { Uri = uri, ConnectedClients = 0 });
-            BrokerClient.Instance.ConnectToRemoteServer(uri);
+            Console.WriteLine("[Broker Host] {0} connected as World Server ", uri);
+            var newService = BrokerClient.Instance.ConnectToRemoteServer(uri);
+            newService.OnConnected += (conn) => {
+                BrokerClient.Instance.AssignOutgoingToIncomingConnection(conn.SessionID, connection.SessionID);
+            };
         }
 
         private void ClientConnectedToWorld(string uri)
@@ -60,7 +65,6 @@ namespace BrokerHostPlugin
         {
             return Servers.OrderBy(server => server.ConnectedClients).First().Uri;
         }
-
         private List<WorldServer> Servers = new List<WorldServer>();
     }
 }

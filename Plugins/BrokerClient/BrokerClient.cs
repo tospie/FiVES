@@ -15,6 +15,8 @@ namespace BrokerClientPlugin
     {
         private static readonly BrokerClient instance = new BrokerClient();
 
+        public event EventHandler<ClientConnectionEventArgs> Connected;
+
         public static BrokerClient Instance
         {
             get { return instance; }
@@ -38,10 +40,11 @@ namespace BrokerClientPlugin
             }
         }
 
-        public void ConnectToRemoteServer(string uri)
+        public ServiceWrapper ConnectToRemoteServer(string uri)
         {
             clientService = ServiceFactory.Discover(uri);
             clientService.OnConnected += OnEstablishedConnection;
+            return clientService;
         }
 
         public void AssignOutgoingToIncomingConnection(Guid incomingSession, Guid outgoingSession)
