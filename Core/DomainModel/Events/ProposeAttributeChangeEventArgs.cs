@@ -10,40 +10,17 @@ namespace FIVES
 
         public ProposeAttributeChangeEventArgs(Entity entity, string componentName, string attributeName, object value, Guid suggester)
         {
-            this.entity = entity;
-            this.componentName = componentName;
-            this.attributeName = attributeName;
-            this.value = value;
+            this.Entity = entity;
+            this.ComponentName = componentName;
+            this.AttributeName = attributeName;
+            this.Value = value;
             this.Suggester = suggester;
         }
 
-        public Entity Entity
-        {
-            get { return entity;  }
-        }
-
-        public string ComponentName
-        {
-            get { return componentName; }
-        }
-
-        public string AttributeName
-        {
-            get { return attributeName; }
-        }
-
-        public object Value
-        {
-            get
-            {
-                return value;
-            }
-        }
-
-        Entity entity;
-        string componentName;
-        string attributeName;
-        object value;
+        public Entity Entity { get; private set; }
+        public string ComponentName { get; private set; }
+        public string AttributeName { get; private set; }
+        public object Value { get; private set; }
         public Guid Suggester { get; private set; }
     }
 }
