@@ -53,7 +53,7 @@ namespace BrokerClientPlugin
             BrokerConnection.RegisterFuncImplementation("objectsync.removeObject",
                 (Action<string>)HandleEntityRemoved);
             BrokerConnection.RegisterFuncImplementation("objectsync.receiveObjectUpdates",
-                (Action<List<UpdateInfo>>)HandleEntitiesUpdated);
+                (Action<Connection, List<UpdateInfo>>)HandleEntitiesUpdated);
 
             // TODO: Check Meaningful way to connect here !!
             var loginRequest = BrokerConnection["auth.login"]("BC-"+World.Instance.ID.ToString(), " ");
@@ -110,12 +110,16 @@ namespace BrokerClientPlugin
             World.Instance.Remove(World.Instance.FindEntity(entityGuid));
         }
 
-        private void HandleEntitiesUpdated(List<UpdateInfo> ReceivedUpdate)
+        private void HandleEntitiesUpdated(Connection connection, List<UpdateInfo> ReceivedUpdate)
         {
+            string localGuidAsString = World.Instance.ID.ToString();
             foreach (UpdateInfo update in ReceivedUpdate)
             {
-                var entity = World.Instance.FindEntity(update.entityGuid);
-                entity[update.componentName][update.attributeName].Suggest(update.value);
+                if (!update.entityOwner.Equals(localGuidAsString) && !update.changedBy.Equals(localGuidAsString))
+                {
+                    var entity = World.Instance.FindEntity(update.entityGuid);
+                    entity[update.componentName][update.attributeName].Suggest(update.value, connection.SessionID);
+                }
             }
         }
 
