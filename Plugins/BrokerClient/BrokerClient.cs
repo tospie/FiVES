@@ -49,19 +49,23 @@ namespace BrokerClientPlugin
             outgoingSessionIDs[incomingSession] = outgoingSession;
         }
 
-            BrokerConnection.RegisterFuncImplementation("objectsync.receiveNewObjects",
+        private void OnEstablishedConnection(Connection connection)
+        {
+            connection.RegisterFuncImplementation("objectsync.receiveNewObjects",
                 (Action<Dictionary<string, object>>)HandleNewEntityAdded);
-            BrokerConnection.RegisterFuncImplementation("objectsync.removeObject",
+            connection.RegisterFuncImplementation("objectsync.removeObject",
                 (Action<string>)HandleEntityRemoved);
-            BrokerConnection.RegisterFuncImplementation("objectsync.receiveObjectUpdates",
+            connection.RegisterFuncImplementation("objectsync.receiveObjectUpdates",
                 (Action<Connection, List<UpdateInfo>>)HandleEntitiesUpdated);
 
-            // TODO: Check Meaningful way to connect here !!
-            var loginRequest = BrokerConnection["auth.login"]("BC-"+World.Instance.ID.ToString(), " ");
-            loginRequest.OnSuccess<bool>(r => OnAuthenticated(r));
+            if (Connected != null)
+                Connected(this, new ClientConnectionEventArgs(connection));
+
+            var loginRequest = connection["auth.login"]("BC-" + World.Instance.ID.ToString(), " ");
+            loginRequest.OnSuccess<bool>(r => OnAuthenticated(connection, r));
         }
 
-        private void OnAuthenticated(bool success)
+        private void OnAuthenticated(Connection connection, bool success)
         {
             if (success)
             {
@@ -70,12 +74,13 @@ namespace BrokerClientPlugin
                     + KIARAServerManager.Instance.ServerPath;
 
                 if (remoteBrokerURL != null)
-                    BrokerConnection["broker.registerAsWorldServer"](localServerURI);
+                    connection["broker.registerAsWorldServer"](localServerURI);
 
-                var a = BrokerConnection["objectsync.listObjects"]();
-                a.OnSuccess<List<Dictionary<string, object>>>(e  => ReceiveInitialEntities(e));
+                var listRequest = connection["objectsync.listObjects"]();
+                listRequest.OnSuccess<List<Dictionary<string, object>>>(e  => ReceiveInitialEntities(e));
             }
         }
+
         private void ReceiveInitialEntities(List<Dictionary<string, object>> initialEntityList)
         {
             foreach (Dictionary<string, object> entity in initialEntityList)
@@ -135,7 +140,6 @@ namespace BrokerClientPlugin
         }
 
         private ServiceWrapper clientService;
-        private Connection BrokerConnection;
         private string remoteBrokerURL;
         private Dictionary<Guid, Guid> outgoingSessionIDs = new Dictionary<Guid,Guid>();
     }
