@@ -111,7 +111,8 @@ namespace BrokerClientPlugin
 
         private void HandleEntityRemoved(string entityGuid)
         {
-            World.Instance.Remove(World.Instance.FindEntity(entityGuid));
+            if(World.Instance.ContainsEntity(new Guid(entityGuid)))
+                World.Instance.Remove(World.Instance.FindEntity(entityGuid));
         }
 
         private void HandleEntitiesUpdated(Connection connection, List<UpdateInfo> ReceivedUpdate)
