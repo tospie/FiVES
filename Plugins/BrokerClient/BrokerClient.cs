@@ -96,8 +96,12 @@ namespace BrokerClientPlugin
                 || EntityInfo["owner"].Equals(World.Instance.ID.ToString())
                 || World.Instance.ContainsEntity(new Guid((string)EntityInfo["guid"]))
                 )
+                // Ignore added entity if it is either not correctly assigned to an owner, or when it was created by
+                // the same instance, or when the entity was already added in a previous update
                 return;
-            Entity receivedEntity = new Entity(new Guid((string)EntityInfo["guid"]), new Guid((string)EntityInfo["owner"]));
+
+            Entity receivedEntity
+                = new Entity(new Guid((string)EntityInfo["guid"]), new Guid((string)EntityInfo["owner"]));
             foreach (KeyValuePair<string, object> entityComponent in EntityInfo)
             {
                 string key = entityComponent.Key;
