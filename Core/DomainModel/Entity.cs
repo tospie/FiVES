@@ -116,7 +116,7 @@ namespace FIVES
             {
                 // if ProposedAttributeChange is null, then Service Bus is uninitialized and we fall back onto normal
                 // change propagation, i.e. via ChangedAttribute event.
-                e.Entity[e.ComponentName][e.AttributeName].Set(e.Value);
+                e.Entity[e.ComponentName][e.AttributeName].Set(e.Value, e.Suggester);
             }
         }
 

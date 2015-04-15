@@ -73,12 +73,12 @@ namespace FIVES
         /// </summary>
         public event EventHandler<ChangedAttributeEventArgs> ChangedAttribute;
 
-        internal void raiseChangeEvent(string attributeName, object oldValue, object newValue)
+        internal void raiseChangeEvent(string attributeName, object oldValue, object newValue, Guid changedBy)
         {
             if (ChangedAttribute != null)
             {
                 if ((oldValue == null && newValue != null) || (oldValue != null && !oldValue.Equals(newValue)))
-                    ChangedAttribute(this, new ChangedAttributeEventArgs(this, attributeName, oldValue, newValue));
+                    ChangedAttribute(this, new ChangedAttributeEventArgs(this, attributeName, oldValue, newValue, changedBy));
             }
         }
 

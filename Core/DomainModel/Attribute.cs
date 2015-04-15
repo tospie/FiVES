@@ -38,7 +38,7 @@ namespace FIVES
             get { return Definition.Type; }
         }
 
-        public void Suggest(object newValue)
+        public void Suggest(object newValue, Guid suggester)
         {
             if(newValue == null && !CanBeAssignedNull(this.Type))
                     throw(new AttributeAssignmentException("Attribute of type " + this.Type
@@ -46,19 +46,21 @@ namespace FIVES
             try
             {
                 var convertedValue = convertValueToAttributeType(newValue);
-                if (World.Instance.ContainsEntity(ParentComponent.ContainingEntity.Guid))
+                if (ParentComponent.ContainingEntity.Owner.Equals(World.Instance.ID)
+                    && World.Instance.ContainsEntity(ParentComponent.ContainingEntity.Guid))
                 {
                     var proposedChange =
                         new ProposeAttributeChangeEventArgs(ParentComponent.ContainingEntity,
                                                             ParentComponent.Name,
                                                             Definition.Name,
-                                                            convertedValue);
+                                                            convertedValue,
+                                                            suggester);
 
                     ParentComponent.ContainingEntity.PublishAttributeChangeSuggestion(proposedChange);
                 }
                 else
                 {
-                    Set(convertedValue);
+                    Set(convertedValue, suggester);
                 }
             }
             catch
@@ -66,6 +68,11 @@ namespace FIVES
                 throw new AttributeAssignmentException("Attribute of type " + this.Type
                     + " can not be assigned from provided value" + newValue + " of type " + newValue.GetType());
             }
+        }
+
+        public void Suggest(object newValue)
+        {
+            Suggest(newValue, World.Instance.ID);
         }
 
         private object convertValueToAttributeType(object value)
@@ -98,9 +105,15 @@ namespace FIVES
 
         internal void Set(object value)
         {
+            Set(value, World.Instance.ID);
+        }
+
+        internal void Set(object value, Guid setBy)
+        {
             var oldValue = CurrentValue;
             CurrentValue = value;
-            ParentComponent.raiseChangeEvent(Definition.Name, oldValue, CurrentValue);
+            lastChangedBy = setBy;
+            ParentComponent.raiseChangeEvent(Definition.Name, oldValue, CurrentValue, lastChangedBy);
         }
 
         private static bool CanBeAssignedNull(Type type)
@@ -112,5 +125,6 @@ namespace FIVES
 
         private ReadOnlyAttributeDefinition Definition;
         private object CurrentValue;
+        private Guid lastChangedBy;
     }
 }

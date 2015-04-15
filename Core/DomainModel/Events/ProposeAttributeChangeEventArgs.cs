@@ -8,12 +8,13 @@ namespace FIVES
     public class ProposeAttributeChangeEventArgs : EventArgs
     {
 
-        public ProposeAttributeChangeEventArgs(Entity entity, string componentName, string attributeName, object value)
+        public ProposeAttributeChangeEventArgs(Entity entity, string componentName, string attributeName, object value, Guid suggester)
         {
             this.entity = entity;
             this.componentName = componentName;
             this.attributeName = attributeName;
             this.value = value;
+            this.Suggester = suggester;
         }
 
         public Entity Entity
@@ -43,5 +44,6 @@ namespace FIVES
         string componentName;
         string attributeName;
         object value;
+        public Guid Suggester { get; private set; }
     }
 }

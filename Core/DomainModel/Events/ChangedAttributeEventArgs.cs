@@ -25,12 +25,13 @@ namespace FIVES
     /// </summary>
     public class ChangedAttributeEventArgs : EventArgs
     {
-        public ChangedAttributeEventArgs(Component component, string attributeName, object oldValue, object newValue)
+        public ChangedAttributeEventArgs(Component component, string attributeName, object oldValue, object newValue, Guid changedBy)
         {
             Component = component;
             AttributeName = attributeName;
             OldValue = oldValue;
             NewValue = newValue;
+            ChangedBy = changedBy;
         }
 
         /// <summary>
@@ -47,5 +48,6 @@ namespace FIVES
         public string AttributeName { get; private set; }
         public object OldValue { get; private set; }
         public object NewValue { get; private set; }
+        public Guid ChangedBy { get; private set; }
     }
 }
