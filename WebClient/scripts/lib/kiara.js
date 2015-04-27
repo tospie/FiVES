@@ -1421,7 +1421,9 @@ define(function () {
             "omp.chatServer.messageFromClient",
             "omp.chatClient.messageFromServer",
             "omp.animationServer.startAnimation",
-            "objectsync.receiveObjectUpdates"
+            "objectsync.receiveObjectUpdates",
+            "objectsync.receiveNewObjects",
+            "browserPerformance.invokeRoundtrip"
         ];
         return onewayMethods.indexOf(qualifiedMethodName) != -1;
     }
