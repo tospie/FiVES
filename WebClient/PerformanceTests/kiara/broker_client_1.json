@@ -6,7 +6,7 @@
         "protocol": {
             "name": "fives-json",
             "port": 34837,
-            "host": "172.16.7.217"
+            "host": "localhost"
         }
     }]
 }

@@ -1,0 +1,12 @@
+{
+    "info": "TestServer",
+    "idlURL": "kiara/fives.kiara",
+    "servers": [{
+        "services": "*",
+        "protocol": {
+            "name": "fives-json",
+            "port": 34840,
+            "host": "localhost"
+        }
+    }]
+}

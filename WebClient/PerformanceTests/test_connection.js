@@ -63,6 +63,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
 
     c.initializeSimulation = function(createdEntityGuid) {
+        console.log("Entity Created, started simulation");
         this.createdEntityGuid = createdEntityGuid;
         this._updateIntervalHandler = window.setInterval(this.updateEntityPosition.bind(this),
             FIVES.WebclientTestsuite.MESSAGE_INTERVAL_MS);

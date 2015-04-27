@@ -13,8 +13,8 @@ requirejs(['kiara', 'jquery', 'websocket-json'],
 function(KIARA, $) {
 
     function main() {
-        FIVES.WebclientTestsuite.kiaraContext = KIARA.createContext();
-        FIVES.WebclientTestsuite.kiaraService = "kiara/fives.json";
+        FIVES.WebclientTestsuite.kiaraContext1 = KIARA.createContext();
+        FIVES.WebclientTestsuite.kiaraService1 = "kiara/broker_client_2.json";
     }
 
     $(document).ready(main);

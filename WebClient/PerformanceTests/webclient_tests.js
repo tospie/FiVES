@@ -31,6 +31,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
     FIVES.WebclientTestsuite.StartTests = function(numberOfClients, messageInterval, experimentRuntime) {
 
         FIVES.WebclientTestsuite.N_TOTAL_CLIENTS = numberOfClients || 20;
+        FIVES.WebclientTestsuite.FAILED_CLIENTS = 0;
         FIVES.WebclientTestsuite.MESSAGE_INTERVAL_MS = messageInterval || 250; // Interval at which messages are sent in milliseconds
         FIVES.WebclientTestsuite.EXPERIMENT_RUNTIME_S = experimentRuntime || 30; // Runtime of experiment in seconds
         startClient(1);
@@ -46,7 +47,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
         FIVES.WebclientTestsuite.RoundtripDelays.push(roundtripDelays);
         FIVES.WebclientTestsuite.DelaysToAttribute.push(delaysToAttribute);
         FIVES.WebclientTestsuite.QueueProcessing.push(queueProcessing);
-        if(resultsReceived == FIVES.WebclientTestsuite.N_TOTAL_CLIENTS)
+        if(resultsReceived == (FIVES.WebclientTestsuite.N_TOTAL_CLIENTS - FIVES.WebclientTestsuite.FAILED_CLIENTS))
         {
             var messagesPerMilliSecond = numMessages / (FIVES.WebclientTestsuite.EXPERIMENT_RUNTIME_S * 1000);
             $("#resultText").text("Total number of messages processed: " + numMessages

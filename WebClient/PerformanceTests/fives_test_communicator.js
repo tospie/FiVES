@@ -31,8 +31,9 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
 
     c.initialize = function() {
-        this.context = FIVES.WebclientTestsuite.kiaraContext;
-        this.context.openConnection(FIVES.WebclientTestsuite.kiaraService, _onOpenedConnection.bind(this) );
+        this.context1 = FIVES.WebclientTestsuite.kiaraContext1;
+        console.log(FIVES.WebclientTestsuite.kiaraService1);
+        this.context1.openConnection(FIVES.WebclientTestsuite.kiaraService1, _onOpenedConnection.bind(this) );
     };
 
     // Attempts to authenticate. The `callback` is executed as a function with one argument - true if client was
@@ -48,6 +49,7 @@ FIVES.WebclientTestsuite = FIVES.WebclientTestsuite || {};
 
         var reportFailure = function(message) {
             console.error(message);
+            FIVES.WebclientTestsuite.FAILED_CLIENTS ++;
         };
 
         var loginCallback = function(result) {
